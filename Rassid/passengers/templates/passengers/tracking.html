@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2 class="mb-4">Passenger Tracking</h2>
+
+    <!-- Search / Tracking Form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label for="tracking_code" class="form-label">Tracking Code / Ticket Number</label>
+                        <input
+                            type="text"
+                            id="tracking_code"
+                            name="tracking_code"
+                            class="form-control"
+                            placeholder="Enter tracking code"
+                            value="{{ request.GET.tracking_code|default_if_none:'' }}"
+                            required
+                        >
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="last_name" class="form-label">Last Name (optional)</label>
+                        <input
+                            type="text"
+                            id="last_name"
+                            name="last_name"
+                            class="form-control"
+                            placeholder="Enter last name"
+                            value="{{ request.GET.last_name|default_if_none:'' }}"
+                        >
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if searched %}
+        {% if passenger %}
+            <!-- Passenger Info -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    Passenger Information
+                </div>
+                <div class="card-body">
+                    <p class="mb-1"><strong>Name:</strong> {{ passenger.name }}</p>
+                    <p class="mb-1"><strong>Ticket Number:</strong> {{ passenger.ticketNumber }}</p>
+                    <p class="mb-0"><strong>Seat:</strong> {{ passenger.seatNumber }}</p>
+                </div>
+            </div>
+
+            <!-- Flights for this passenger -->
+            <div class="card">
+                <div class="card-header">
+                    Flights for this Passenger
+                </div>
+                <div class="card-body p-0">
+                    <table class="table mb-0 table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Flight Number</th>
+                                <th>Status</th>
+                                <th>Origin</th>
+                                <th>Destination</th>
+                                <th>Departure</th>
+                                <th>Arrival</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for flight in flights %}
+                                <tr>
+                                    <td>{{ flight.flightNumber }}</td>
+                                    <td>{{ flight.status }}</td>
+                                    <td>{{ flight.origin.code }}</td>
+                                    <td>{{ flight.destination.code }}</td>
+                                    <td>{{ flight.scheduledDeparture }}</td>
+                                    <td>{{ flight.scheduledArrival }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        No flights found for this passenger.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        {% else %}
+            <div class="alert alert-danger">
+                No passenger found for the provided tracking information.
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info">
+            Please enter a tracking code to search for a passenger.
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

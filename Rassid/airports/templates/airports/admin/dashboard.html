@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Airport Dashboard{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+
+    <h1 class="mb-4">Airport Dashboard</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-muted mb-2">Employees</h6>
+                    <h3 class="card-title">
+                        {{ employees_count|default:"0" }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-muted mb-2">Flights</h6>
+                    <h3 class="card-title">
+                        {{ flights_count|default:"0" }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-muted mb-2">Active Subscriptions</h6>
+                    <h3 class="card-title">
+                        {{ active_subscriptions_count|default:"0" }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-muted mb-2">Open Tickets</h6>
+                    <h3 class="card-title">
+                        {{ open_tickets_count|default:"0" }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Latest Employees</span>
+            <a href="{% url 'airports:employees_list' %}" class="btn btn-sm btn-outline-primary">
+                View all employees
+            </a>
+        </div>
+        <div class="card-body p-0">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if latest_employees %}
+                        {% for emp in latest_employees %}
+                            <tr>
+                                <td>{{ emp.name }}</td>
+                                <td>{{ emp.email }}</td>
+                                <td>{{ emp.role }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center p-3">
+                                No employees found.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

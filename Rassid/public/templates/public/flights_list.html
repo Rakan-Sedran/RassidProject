@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Flights</h2>
+
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Flight Number</th>
+                <th>Status</th>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for f in flights %}
+            <tr>
+                <td>{{ f.flightNumber }}</td>
+                <td>{{ f.status }}</td>
+                <td>{{ f.origin.code }}</td>
+                <td>{{ f.destination.code }}</td>
+                <td>{{ f.scheduledDeparture }}</td>
+                <td>{{ f.scheduledArrival }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No flights available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

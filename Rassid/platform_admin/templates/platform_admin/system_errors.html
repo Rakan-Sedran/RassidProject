@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">System Errors & Logs</h2>
+
+    <form method="get" class="row g-3 mb-3">
+        <div class="col-md-3">
+            <label class="form-label">From Date</label>
+            <input type="date" name="from" class="form-control" value="{{ request.GET.from }}">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">To Date</label>
+            <input type="date" name="to" class="form-control" value="{{ request.GET.to }}">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Level</label>
+            <select name="level" class="form-control">
+                <option value="">All</option>
+                <option value="ERROR" {% if request.GET.level == "ERROR" %}selected{% endif %}>Error</option>
+                <option value="WARNING" {% if request.GET.level == "WARNING" %}selected{% endif %}>Warning</option>
+                <option value="INFO" {% if request.GET.level == "INFO" %}selected{% endif %}>Info</option>
+            </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-outline-primary w-100">Filter</button>
+        </div>
+    </form>
+
+    <table class="table table-hover table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Time</th>
+                <th>Level</th>
+                <th>Source</th>
+                <th>Message</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.createdAt }}</td>
+                <td>
+                    {% if log.level == "ERROR" %}
+                        <span class="badge text-bg-danger">ERROR</span>
+                    {% elif log.level == "WARNING" %}
+                        <span class="badge text-bg-warning">WARNING</span>
+                    {% else %}
+                        <span class="badge text-bg-secondary">{{ log.level }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ log.source }}</td>
+                <td>{{ log.message|truncatechars:80 }}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-secondary"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#log-{{ log.id }}">
+                        View
+                    </button>
+                </td>
+            </tr>
+            <tr class="collapse" id="log-{{ log.id }}">
+                <td colspan="5">
+                    <pre class="mb-0 small">{{ log.details }}</pre>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No logs found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

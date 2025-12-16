@@ -1,0 +1,38 @@
+/* Public Website Styling */
+
+.header {
+    background: #1f2937;
+    padding: 18px;
+    color: white;
+    text-align: center;
+}
+
+.search-box {
+    width: 100%;
+    max-width: 500px;
+    margin: 25px auto;
+    display: flex;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px 0 0 6px;
+}
+
+.search-box button {
+    padding: 12px 18px;
+    background: #3b82f6;
+    color: white;
+    border-radius: 0 6px 6px 0;
+}
+
+.airport-card {
+    padding: 18px;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+

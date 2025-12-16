@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Airports Management</h2>
+
+    <div class="d-flex justify-content-between mb-3">
+        <form class="d-flex" method="get">
+            <input type="text"
+                   name="q"
+                   class="form-control me-2"
+                   placeholder="Search by airport code or name"
+                   value="{{ request.GET.q|default_if_none:'' }}">
+            <button type="submit" class="btn btn-outline-primary">Search</button>
+        </form>
+
+        <a href="{% url 'platform_admin_add_airport' %}" class="btn btn-primary">
+            Add New Airport
+        </a>
+    </div>
+
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Subscription</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for airport in airports %}
+            <tr>
+                <td>{{ airport.code }}</td>
+                <td>{{ airport.name }}</td>
+                <td>{{ airport.city }}</td>
+                <td>{{ airport.country }}</td>
+                <td>
+                    {% if airport.subscription %}
+                        {{ airport.subscription.planType }}
+                        <br>
+                        <small>Expires: {{ airport.subscription.expireAt|date:"Y-m-d" }}</small>
+                    {% else %}
+                        <span class="text-muted">No subscription</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if airport.subscription and airport.subscription.status == "active" %}
+                        <span class="badge text-bg-success">Active</span>
+                    {% else %}
+                        <span class="badge text-bg-secondary">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'platform_admin_edit_airport' airport.id %}"
+                       class="btn btn-sm btn-outline-primary">
+                        Edit
+                    </a>
+                    <a href="{% url 'platform_admin_airport_details' airport.id %}"
+                       class="btn btn-sm btn-outline-secondary">
+                        Details
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No airports found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if page_obj %}
+    <nav aria-label="Airports pagination">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

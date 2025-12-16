@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Employees List{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0">Employees</h1>
+
+        <a href="{% url 'airports:add_employee' %}" class="btn btn-primary">
+            + Add New Employee
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Airport</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if employees %}
+                        {% for emp in employees %}
+                            <tr>
+                                <td>{{ emp.name }}</td>
+                                <td>{{ emp.email }}</td>
+                                <td>{{ emp.role }}</td>
+                                <td>{{ emp.airport.code }}</td>
+                                <td class="text-center">
+                                    <a href="#" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center p-3">
+                                No employees registered yet.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

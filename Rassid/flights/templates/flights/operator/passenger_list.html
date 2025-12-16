@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2>Passengers for Flight {{ flight.flightNumber }}</h2>
+
+    <table class="table table-bordered table-hover mt-3">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Seat</th>
+                <th>Ticket Number</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for p in passengers %}
+            <tr>
+                <td>{{ p.name }}</td>
+                <td>{{ p.seatNumber }}</td>
+                <td>{{ p.ticketNumber }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center">No passengers found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+    <a href="{% url 'operator_flights_list' %}" class="btn btn-primary mt-3">
+        Back to Flights
+    </a>
+</div>
+{% endblock %}

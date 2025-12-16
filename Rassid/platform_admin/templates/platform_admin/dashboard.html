@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Platform Admin Dashboard</h2>
+
+    <div class="row g-3">
+        <div class="col-md-3">
+            <div class="card text-bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Airports</h5>
+                    <p class="card-text fs-4">{{ total_airports }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Active Subscriptions</h5>
+                    <p class="card-text fs-4">{{ active_subscriptions }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Expiring Soon</h5>
+                    <p class="card-text fs-4">{{ expiring_soon }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title">System Errors (24h)</h5>
+                    <p class="card-text fs-4">{{ errors_last_24h }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-4">
+
+    <h4>Recent Activity</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in recent_activity %}
+            <tr>
+                <td>{{ item.time }}</td>
+                <td>{{ item.type }}</td>
+                <td>{{ item.description }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center">No recent activity.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

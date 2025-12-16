@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Ticket Details</h1>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h3>Passenger Information</h3>
+        <p><strong>Name:</strong> {{ ticket.passenger.name }}</p>
+        <p><strong>Email:</strong> {{ ticket.passenger.email }}</p>
+
+        <hr>
+
+        <h3>Flight Information</h3>
+        <p><strong>Flight Number:</strong> {{ ticket.flight.flightNumber }}</p>
+        <p><strong>Origin:</strong> {{ ticket.flight.origin.code }}</p>
+        <p><strong>Destination:</strong> {{ ticket.flight.destination.code }}</p>
+        <p><strong>Departure:</strong> {{ ticket.flight.scheduledDeparture }}</p>
+        <p><strong>Arrival:</strong> {{ ticket.flight.scheduledArrival }}</p>
+
+        <hr>
+
+        <h3>Ticket Information</h3>
+        <p><strong>Ticket ID:</strong> {{ ticket.id }}</p>
+        <p><strong>Status:</strong> {{ ticket.status }}</p>
+        <p><strong>Issued At:</strong> {{ ticket.createdAt }}</p>
+
+        <a href="{% url 'tickets_list' %}" class="btn btn-secondary mt-3">Back to Tickets</a>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Flights List</h2>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Flight Number</th>
+                <th>Status</th>
+                <th>Airline</th>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for flight in flights %}
+            <tr>
+                <td>{{ flight.flightNumber }}</td>
+                <td>{{ flight.status }}</td>
+                <td>{{ flight.airlineCode }}</td>
+                <td>{{ flight.origin.code }}</td>
+                <td>{{ flight.destination.code }}</td>
+                <td>{{ flight.scheduledDeparture }}</td>
+                <td>{{ flight.scheduledArrival }}</td>
+                <td>
+                    <a href="{% url 'operator_edit_flight' flight.id %}" class="btn btn-primary btn-sm">
+                        Edit
+                    </a>
+
+                    <a href="{% url 'operator_passengers_list' flight.id %}" class="btn btn-secondary btn-sm">
+                        Passengers
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center">No flights available</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+{% endblock %}

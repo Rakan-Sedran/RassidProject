@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Airport Settings{% endblock %}
+
+{% block content %}
+<div class="container my-4" style="max-width: 800px;">
+
+    <h1 class="mb-4">Airport Settings</h1>
+
+    <!-- Current airport info -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="mb-3">Current airport information</h5>
+
+            <p class="mb-1"><strong>Code:</strong> {{ airport.code }}</p>
+            <p class="mb-1"><strong>Name:</strong> {{ airport.name }}</p>
+            <p class="mb-1"><strong>City:</strong> {{ airport.city }}</p>
+            <p class="mb-1"><strong>Country:</strong> {{ airport.country }}</p>
+        </div>
+    </div>
+
+    <!-- Edit form -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="mb-3">Edit airport settings</h5>
+
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form %}
+                    {{ form.as_p }}
+                {% else %}
+                    <div class="mb-3">
+                        <label class="form-label">Airport name</label>
+                        <input type="text" name="name" class="form-control" value="{{ airport.name }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-control" value="{{ airport.city }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Country</label>
+                        <input type="text" name="country" class="form-control" value="{{ airport.country }}">
+                    </div>
+                {% endif %}
+
+                <button type="submit" class="btn btn-primary">
+                    Save settings
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

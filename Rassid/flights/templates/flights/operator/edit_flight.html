@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Edit Flight</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Flight Number</label>
+            <input type="text" name="flightNumber" class="form-control" value="{{ flight.flightNumber }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select class="form-control" name="status">
+                <option value="scheduled" {% if flight.status == "scheduled" %}selected{% endif %}>Scheduled</option>
+                <option value="active" {% if flight.status == "active" %}selected{% endif %}>Active</option>
+                <option value="delayed" {% if flight.status == "delayed" %}selected{% endif %}>Delayed</option>
+                <option value="cancelled" {% if flight.status == "cancelled" %}selected{% endif %}>Cancelled</option>
+                <option value="landed" {% if flight.status == "landed" %}selected{% endif %}>Landed</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Departure Time</label>
+            <input type="datetime-local" name="scheduledDeparture" class="form-control" 
+                   value="{{ flight.scheduledDeparture|date:'Y-m-d\\TH:i' }}">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Arrival Time</label>
+            <input type="datetime-local" name="scheduledArrival" class="form-control" 
+                   value="{{ flight.scheduledArrival|date:'Y-m-d\\TH:i' }}">
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <a href="{% url 'operator_flights_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

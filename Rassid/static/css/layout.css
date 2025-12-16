@@ -1,0 +1,39 @@
+/* Main Layout */
+.wrapper {
+    display: flex;
+}
+
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #1f2937;
+    padding: 20px 15px;
+    color: #fff;
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    color: #cbd5e1;
+}
+
+.sidebar a:hover {
+    background: #374151;
+    color: #fff;
+}
+
+.navbar {
+    height: 65px;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.content {
+    flex: 1;
+    padding: 25px;
+}

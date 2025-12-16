@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Add Employee{% endblock %}
+
+{% block content %}
+<div class="container my-4" style="max-width: 700px;">
+
+    <h1 class="mb-4">Add New Employee</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                {# If you are using a Django ModelForm called "form" #}
+                {% if form %}
+                    {{ form.as_p }}
+                {% else %}
+                    <div class="mb-3">
+                        <label class="form-label">Full name</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <input type="text" name="role" class="form-control" placeholder="e.g. Manager / Staff">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Airport code</label>
+                        <input type="text" name="airport_code" class="form-control" placeholder="e.g. RUH">
+                    </div>
+                {% endif %}
+
+                <button type="submit" class="btn btn-primary">
+                    Save
+                </button>
+                <a href="{% url 'airports:employees_list' %}" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

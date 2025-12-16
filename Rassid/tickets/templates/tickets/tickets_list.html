@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Tickets List</h1>
+</div>
+
+<div class="card">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Ticket ID</th>
+                <th>Passenger</th>
+                <th>Flight Number</th>
+                <th>Issued At</th>
+                <th>Status</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+            <tr>
+                <td>{{ ticket.id }}</td>
+                <td>{{ ticket.passenger.name }}</td>
+                <td>{{ ticket.flight.flightNumber }}</td>
+                <td>{{ ticket.createdAt }}</td>
+                <td>{{ ticket.status }}</td>
+                <td>
+                    <a href="{% url 'ticket_details' ticket.id %}" class="btn btn-sm btn-primary">Details</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No tickets available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
