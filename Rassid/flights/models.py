@@ -7,10 +7,6 @@ class Flight(models.Model):
     scheduledDeparture = models.DateTimeField()
     scheduledArrival = models.DateTimeField()
     airlineCode = models.CharField(max_length=10)
-    gate = models.CharField(max_length=10, blank=True, null=True)
-    terminal = models.CharField(max_length=10, blank=True, null=True)
-    boarding_open = models.TimeField(null=True, blank=True)
-    boarding_close = models.TimeField(null=True, blank=True)
 
     origin = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name='origin_flights')
     destination = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name='destination_flights')

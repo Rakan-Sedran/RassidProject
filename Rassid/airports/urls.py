@@ -1,12 +1,17 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import AirportViewSet, AirportUserViewSet, AirportSubscriptionViewSet
 from . import views
 
+router = DefaultRouter()
+router.register("airports", AirportViewSet)
+router.register("users", AirportUserViewSet)
+router.register("subscriptions", AirportSubscriptionViewSet)
+
 urlpatterns = [
-    path('dashboard/operator/', views.operator_dashboard, name='operator_dashboard'),
-    path('dashboard/operator/demo/', views.operator_dashboard, name='operator_dashboard_demo'),
-    path('dashboard/admin/', views.admin_dashboard, name='airport_admin_dashboard'),
-    path('dashboard/admin/demo/', views.admin_dashboard, name='admin_dashboard_demo'),
-    path('update-gate/', views.update_gate, name='update_gate'),
-    path('sync-flights/', views.sync_flights, name='sync_flights'),
-    path('api/sync/', views.api_sync_flights, name='api_sync_flights'),
+    path("", include(router.urls)),
+    path("dashboard/", views.dashboard, name="airport_admin_dashboard"),
+    path("employees/", views.employees_list, name="airport_admin_employees"),
+    path("employees/add/", views.add_employee, name="airport_admin_add_employee"),
+    path("settings/", views.airport_settings, name="airport_admin_settings"),
 ]
