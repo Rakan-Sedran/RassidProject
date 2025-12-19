@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Rassid{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/base.css">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="/">Rassid</a>
+        </div>
+        <div class="nav-links">
+            {% if request.session.user_id %}
+
+            {% if request.session.role == 'platform_admin' %}
+            <a href="{% url 'platform_admin_dashboard' %}">Dashboard</a>
+            {% elif request.session.role == 'admin' %}
+            <a href="{% url 'airport_admin_dashboard' %}">Dashboard</a>
+            {% elif request.session.role == 'operator' %}
+            <a href="{% url 'operator_dashboard' %}">Dashboard</a>
+            {% endif %}
+
+            <a href="{% url 'logout' %}" class="btn-logout">Logout</a>
+
+            {% else %}
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'about' %}">About Us</a>
+            <a href="{% url 'tracking' %}">Track Flight</a>
+            <a href="{% url 'login' %}" class="btn-login">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Rassid. All rights reserved.</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+
+    <!-- Auto-Sync Script: Triggers DB update every 60 seconds -->
+    <script>
+        setInterval(function () {
+            fetch("{% url 'api_sync_flights' %}")
+                .then(response => response.json())
+                .then(data => console.log('Flight Sync:', data.status))
+                .catch(err => console.error('Sync failed', err));
+        }, 60000); // 60 seconds
+    </script>
+</body>
+
+</html>
