@@ -19,17 +19,15 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("api/airports/", include("airports.urls")),
-    path("api/flights/", include("flights.urls")),
-    path("api/users/", include("users.urls")),
-    path("api/passengers/", include("passengers.urls")),
-    path("api/notifications/", include("notifications.urls")),
-    path("api/tickets/", include("tickets.urls")),
+    
+    # Frontend Pages
+    path('', include('public.urls')),
+    path('passengers/', include('passengers.urls')),
+    path('airports/', include('airports.urls')),
+    path('platform/', include('platform_admin.urls')),
+    path('users/', include('users.urls')),
 
-    path("platform-admin/", include("platform_admin.urls")),
-    path("airport-admin/", include("airports.urls")),
-    path("operator/", include("flights.urls")),
-    path("passengers/", include("passengers.urls")),
-    path("tickets/", include("tickets.urls")),
-    path("", include("public.urls")),
+    # API Endpoints (Keeping existing structure if needed, or commenting out if duplicates)
+    # path("api/airports/", include("airports.urls")), 
+    # path("api/flights/", include("flights.urls")),
 ]

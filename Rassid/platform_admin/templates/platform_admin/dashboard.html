@@ -1,1 +1,135 @@
- 
+{% extends 'base.html' %}
+
+{% block title %}Super Admin Dashboard - Rassid{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/super_admin_dashboard.css">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h2>Platform Super Admin Dashboard</h2>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <label>Total Airports</label>
+        <div class="value">{{ airports.count }}</div>
+    </div>
+    <div class="stat-card">
+        <label>Pending Requests</label>
+        <div class="value">{{ pending_users|length }}</div>
+    </div>
+</div>
+
+<section class="section-card">
+    <div class="section-header">
+        <h3>Pending Account Requests</h3>
+        <form method="GET" action="{% url 'platform_admin_dashboard' %}" style="display: inline-block;">
+            <input type="text" name="q" value="{{ request.GET.q|default:'' }}" placeholder="Search admins/airports..."
+                style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 250px;">
+            <button type="submit" class="btn-sm btn-outline">Search</button>
+            {% if request.GET.q %}
+            <a href="{% url 'platform_admin_dashboard' %}"
+                style="text-decoration: none; font-size: 0.9em; margin-left: 5px;">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Airport Name</th>
+                <th>Admin Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in pending_users %}
+            <tr>
+                <td>{{ item.profile.airport.name|default:"--" }}</td>
+                <td>{{ item.profile.name|default:"--" }}</td>
+                <td>{{ item.user.email }}</td>
+                <td><span class="badge badge-warning">Pending</span></td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="{% url 'approve_user' item.user.id %}" class="btn-primary-small">Approve</a>
+                        <a href="{% url 'reject_user' item.user.id %}" class="btn-outline-danger">Reject</a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center;">No pending requests.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section class="section-card">
+    <div class="section-header">
+        <h3>Active System Administrators</h3>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Airport</th>
+                <th>Admin Name</th>
+                <th>Admin Email</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in active_admins %}
+            <tr>
+                <td>{{ item.profile.airport.name|default:"--" }}</td>
+                <td>{{ item.profile.name|default:"--" }}</td>
+                <td>{{ item.user.email }}</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td>
+                    <a href="{% url 'reject_user' item.user.id %}" class="btn-sm btn-danger"
+                        onclick="return confirm('Are you sure you want to remove this admin?');">Remove</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center;">No active administrators.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section class="section-card">
+    <div class="section-header">
+        <h3>Registered Airports</h3>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Airport Name</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for airport in airports %}
+            <tr>
+                <td>{{ airport.name }}</td>
+                <td>{{ airport.city }}</td>
+                <td>{{ airport.country }}</td>
+                <td>{{ airport.code }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center;">No airports registered.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
