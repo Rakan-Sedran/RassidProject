@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="pricing-header">
+    <h1>Platform License Plans</h1>
+    <p style="color: #aaa; font-size: 1.2rem;">Full access to RASSID platform. Choose the license duration that fits
+        your airport's strategy.</p>
+</div>
+
+<div class="pricing-container">
+    <div class="price-card">
+        <div class="plan-name">Annual License</div>
+        <div class="price">1 Year</div>
+        <p style="color: #aaa; margin-bottom: 20px;">Standard Contract</p>
+
+        <ul class="features">
+            <li>Full Platform Access</li>
+            <li>Unlimited Users & Flights</li>
+            <li>Real-time Live Map</li>
+            <li>24/7 Standard Support</li>
+            <li>System Updates</li>
+        </ul>
+        <a href="{% url 'request_subscription' %}?plan=1_year" class="btn-plan btn-outline">Subscribe (1 Year)</a>
+    </div>
+
+    <div class="price-card featured">
+        <div
+            style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #00f260; color: #000; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">
+            BEST VALUE</div>
+        <div class="plan-name">Strategic License</div>
+        <div class="price">3 Years</div>
+        <p style="color: #ccc; margin-bottom: 20px;">Save 15% on long term</p>
+
+        <ul class="features">
+            <li>Full Platform Access</li>
+            <li>Unlimited Users & Flights</li>
+            <li>Real-time Live Map</li>
+            <li>Priority Support & Training</li>
+            <li>System Updates</li>
+        </ul>
+        <a href="{% url 'request_subscription' %}?plan=3_years" class="btn-plan btn-primary">Subscribe (3 Years)</a>
+    </div>
+
+    <div class="price-card">
+        <div class="plan-name">Long-Term Partner</div>
+        <div class="price">5 Years</div>
+        <p style="color: #aaa; margin-bottom: 20px;">Maximum cost efficiency</p>
+
+        <ul class="features">
+            <li>Full Platform Access</li>
+            <li>Unlimited Users & Flights</li>
+            <li>Real-time Live Map</li>
+            <li>Dedicated Account Manager</li>
+            <li>System Updates</li>
+        </ul>
+        <a href="{% url 'request_subscription' %}?plan=5_years" class="btn-plan btn-outline">Subscribe (5 Years)</a>
+    </div>
+</div>
+{% endblock %}

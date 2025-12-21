@@ -30,7 +30,10 @@ SECRET_KEY = 'django-insecure-1#nl0yuc(hwjf9&hj)6pr$aa$v5m1y1$t6yvhhl*kq7um0)a^2
 DEBUG = True
 
 ALLOWED_HOSTS = []
+AUTH_USER_MODEL = 'users.User'
 
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
 
 # Application definition
 
@@ -145,3 +148,29 @@ CELERY_BEAT_SCHEDULE = {
 
 
 AVIATIONSTACK_API_KEY = os.getenv("AVIATIONSTACK_API_KEY")
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'zsyz8335@gmail.com'
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD") 
+
+ADMIN_EMAIL = 'zsyz8335@gmail.com' 
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+LOGIN_URL = 'login'
+
+
+LOGIN_REDIRECT_URL = 'public_home'
+
+
+LOGOUT_REDIRECT_URL = 'login'

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container" style="padding-top: 100px; padding-bottom: 50px; max-width: 1000px;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 style="color: white; font-weight: 800;">Request Details</h2>
+        <a href="{% url 'admin_requests_list' %}" class="btn btn-outline-light"
+            style="border-radius: 50px; padding: 8px 20px;">
+            <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">arrow_back</span>
+            Back to List
+        </a>
+    </div>
+
+    <div class="glass-card"
+        style="padding: 40px; border-radius: 16px; background: #1e2124; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px;">
+
+            <div>
+                <h3 style="color: #00f260; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                    Airport Information
+                </h3>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="color: #888; font-size: 0.9rem;">Airport Name</label>
+                    <div style="color: #fff; font-size: 1.2rem; font-weight: bold;">{{ req.airport_name }}</div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="color: #888; font-size: 0.9rem;">IATA Code</label>
+                    <div>
+                        <span
+                            style="background: rgba(255,255,255,0.1); color: #fff; padding: 5px 10px; border-radius: 6px; font-family: monospace;">
+                            {{ req.airport_code }}
+                        </span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="color: #888; font-size: 0.9rem;">Location</label>
+                    <div style="color: #fff; font-size: 1.1rem;">
+                        <span class="material-symbols-outlined"
+                            style="font-size: 16px; vertical-align: middle; color: #666;">location_on</span>
+                        {{ req.city }}, {{ req.country }}
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 style="color: #0575e6; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                    Contact & Plan
+                </h3>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="color: #888; font-size: 0.9rem;">Admin Email</label>
+                    <div style="color: #fff; font-size: 1.1rem;">{{ req.admin_email }}</div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="color: #888; font-size: 0.9rem;">Phone Number</label>
+                    <div style="color: #fff; font-size: 1.1rem;">{{ req.phone_number }}</div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="color: #888; font-size: 0.9rem;">Selected Plan</label>
+                    <div style="margin-top: 5px;">
+                        {% if req.selected_plan == '1_year' %}
+                        <span
+                            style="background: rgba(23, 162, 184, 0.15); color: #17a2b8; padding: 6px 15px; border-radius: 20px; font-weight: bold;">1
+                            Year Plan</span>
+                        {% elif req.selected_plan == '3_years' %}
+                        <span
+                            style="background: rgba(0, 123, 255, 0.15); color: #007bff; padding: 6px 15px; border-radius: 20px; font-weight: bold;">3
+                            Years Plan</span>
+                        {% else %}
+                        <span
+                            style="background: rgba(255, 193, 7, 0.15); color: #ffc107; padding: 6px 15px; border-radius: 20px; font-weight: bold;">5
+                            Years Plan</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            style="border-top: 1px solid #333; padding-top: 30px; display: flex; gap: 15px; justify-content: flex-end;">
+
+            <a href="{% url 'admin_reject_request' req.id %}"
+                onclick="return confirm('Are you sure you want to reject this request?');"
+                style="padding: 12px 30px; background: rgba(255, 71, 87, 0.1); color: #ff4757; text-decoration: none; border-radius: 8px; font-weight: bold; border: 1px solid rgba(255, 71, 87, 0.3); transition: 0.3s;">
+                Reject Request
+            </a>
+
+            <a href="{% url 'admin_approve_request' req.id %}"
+                onclick="return confirm('Are you sure? This will create the airport and send login credentials.');"
+                style="padding: 12px 30px; background: linear-gradient(135deg, #00f260, #0575e6); color: white; text-decoration: none; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 15px rgba(0, 242, 96, 0.3);">
+                Approve & Create Airport
+            </a>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

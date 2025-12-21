@@ -3,7 +3,7 @@ from airports.models import Airport
 from flights.models import Flight
 
 def home(request):
-    return render(request, "public/flights_list.html", {
+    return render(request, "public/home.html", {
         "flights": Flight.objects.all()[:20]
     })
 
@@ -17,3 +17,6 @@ def airports_list(request):
 def flights_list(request):
     flights = Flight.objects.all().order_by("-scheduledDeparture")[:50]
     return render(request, "public/flights_list.html", {"flights": flights})
+
+def pricing_view(request):
+    return render(request, 'public/pricing.html')

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="dashboard-container">
+
+    <div class="header-section">
+        <div>
+            <h2 class="page-title">Subscription Requests</h2>
+            <p class="page-subtitle">Manage incoming requests from airport admins</p>
+        </div>
+
+        <div class="stats-badge">
+            <span class="material-symbols-outlined icon">pending_actions</span>
+            <span class="label">Pending:</span>
+            <span class="count">{{ requests.count }}</span>
+        </div>
+    </div>
+
+    <div class="glass-card">
+
+        {% if requests %}
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Airport Details</th>
+                    <th style="width: 20%;">Location</th>
+                    <th style="width: 20%;">Admin Email</th>
+                    <th style="width: 15%;">Plan</th>
+                    <th style="width: 10%;">Date</th>
+                    <th style="width: 10%; text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in requests %}
+                <tr>
+                    <td>
+                        <div class="airport-name">{{ req.airport_name }}</div>
+                        <div class="airport-code">{{ req.airport_code }}</div>
+                    </td>
+                    <td class="location-cell">
+                        <span class="material-symbols-outlined location-icon">location_on</span>
+                        {{ req.city }}, {{ req.country }}
+                    </td>
+                    <td class="email-cell">{{ req.admin_email }}</td>
+                    <td>
+                        {% if req.selected_plan == '1_year' %}
+                        <span class="plan-badge plan-1yr">1 Year Plan</span>
+                        {% elif req.selected_plan == '3_years' %}
+                        <span class="plan-badge plan-3yr">3 Years Plan</span>
+                        {% else %}
+                        <span class="plan-badge plan-5yr">5 Years Plan</span>
+                        {% endif %}
+                    </td>
+                    <td class="date-cell">{{ req.created_at|date:"Y-m-d" }}</td>
+                    <td style="text-align: right;">
+                        <a href="{% url 'admin_request_details' req.id %}" class="btn-review">
+                            Review
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon-container">
+                <span class="material-symbols-outlined empty-icon">inbox</span>
+            </div>
+            <h3 class="empty-title">No Pending Requests</h3>
+            <p class="empty-subtitle">Great job! You're all caught up.</p>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}
