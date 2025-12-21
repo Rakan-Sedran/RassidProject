@@ -211,20 +211,22 @@ Table:
 - API errors  
 - SMS provider errors  
 - Failed emails  
-- System logs  
+- System logs
 
 ---
-<img width="2816" height="1369" alt="Screenshot_2025-12-16_093418" src="https://github.com/user-attachments/assets/45dbc632-4113-40d4-adc2-2f9b6c3d867c" />
-<img width="1411" height="1381" alt="Screenshot_2025-12-16_093448" src="https://github.com/user-attachments/assets/5e9d5c10-2e22-406c-bfc0-2ddcae6a20e7" />
-<img width="1014" height="1427" alt="Screenshot_2025-12-16_093515" src="https://github.com/user-attachments/assets/31f154d3-e3d2-4f7b-a8b2-264b11839b91" />
-<img width="1179" height="1462" alt="Screenshot_2025-12-16_093634" src="https://github.com/user-attachments/assets/cf2e7a84-a70d-4f51-8d6a-ae8233c15baa" />
-<img width="999" height="1414" alt="Screenshot_2025-12-16_093606" src="https://github.com/user-attachments/assets/e64cb317-3525-40a5-b6d2-5dcdb012ae52" />
-<img width="1569" height="918" alt="Screenshot_2025-12-16_093540" src="https://github.com/user-attachments/assets/48617c6e-33ca-4338-a7da-24904ff6ee18" />
+
+## Wireframe
+- Home <img width="2816" height="1369" alt="Screenshot_2025-12-16_093418" src="https://github.com/user-attachments/assets/45dbc632-4113-40d4-adc2-2f9b6c3d867c" />
+- About Us <img width="1411" height="1381" alt="Screenshot_2025-12-16_093448" src="https://github.com/user-attachments/assets/5e9d5c10-2e22-406c-bfc0-2ddcae6a20e7" />
+- Passenger Tracking <img width="1014" height="1427" alt="Screenshot_2025-12-16_093515" src="https://github.com/user-attachments/assets/31f154d3-e3d2-4f7b-a8b2-264b11839b91" />
+- Soper Admin Dashboard <img width="1179" height="1462" alt="Screenshot_2025-12-16_093634" src="https://github.com/user-attachments/assets/cf2e7a84-a70d-4f51-8d6a-ae8233c15baa" />
+- Admin Dashboard  <img width="999" height="1414" alt="Screenshot_2025-12-16_093606" src="https://github.com/user-attachments/assets/e64cb317-3525-40a5-b6d2-5dcdb012ae52" />
+- Operator Dashboard <img width="1569" height="918" alt="Screenshot_2025-12-16_093540" src="https://github.com/user-attachments/assets/48617c6e-33ca-4338-a7da-24904ff6ee18" />
+
 ---
 
-<img width="1190" height="1131" alt="ZLNRZjis47tNLmZxs29nyce4RjnjsXfejulQ_O0nEPQ9vOKOZhph5lttoc9M5YzkzaqwdCiPyl3mSs0WxerkmfEo7WXCApI4i6OcjUyPDyBPhVeRsmzDCwwqFslL7RdzfsdRxvLSjihovVCmmW-zsICjsy2aR7V10mFt8K744MMlKVw4_jATSDbAO6HbC5bV4waJw7GL56bbyTv9d8f6s3lYp" src="https://github.com/user-attachments/assets/aad63839-56fb-4288-8db6-2f0ac8489ada" />
----
-<img width="540" height="1982" alt="IMG_3587" src="https://github.com/user-attachments/assets/ad7f35cf-ba33-4753-8cb0-3e105b264c3f" />
----
-<img width="970" height="1204" alt="IMG_3585" src="https://github.com/user-attachments/assets/aa04b7fd-7524-45bf-b260-53051e2770ef" />
----
+## UML
+- Classes <img width="1190" height="1131" alt="ZLNRZjis47tNLmZxs29nyce4RjnjsXfejulQ_O0nEPQ9vOKOZhph5lttoc9M5YzkzaqwdCiPyl3mSs0WxerkmfEo7WXCApI4i6OcjUyPDyBPhVeRsmzDCwwqFslL7RdzfsdRxvLSjihovVCmmW-zsICjsy2aR7V10mFt8K744MMlKVw4_jATSDbAO6HbC5bV4waJw7GL56bbyTv9d8f6s3lYp" src="https://github.com/user-attachments/assets/aad63839-56fb-4288-8db6-2f0ac8489ada" />
+
+- Use Case<img width="970" height="1982" alt="IMG_3587" src="https://github.com/user-attachments/assets/ad7f35cf-ba33-4753-8cb0-3e105b264c3f" />
+- Sequence <img width="970" height="1204" alt="IMG_3585" src="https://github.com/user-attachments/assets/aa04b7fd-7524-45bf-b260-53051e2770ef" />
