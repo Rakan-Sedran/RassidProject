@@ -214,8 +214,8 @@ Table:
 - System logs  
 
 ## Wireframe
-<img width="2816" height="1369" alt="Screenshot_2025-12-16_093418" src="https://github.com/user-attachments/assets/45dbc632-4113-40d4-adc2-2f9b6c3d867c" />
-<img width="1411" height="1381" alt="Screenshot_2025-12-16_093448" src="https://github.com/user-attachments/assets/5e9d5c10-2e22-406c-bfc0-2ddcae6a20e7" />
+- Home <img width="2816" height="1369" alt="Screenshot_2025-12-16_093418" src="https://github.com/user-attachments/assets/45dbc632-4113-40d4-adc2-2f9b6c3d867c" />
+- About Us <img width="1411" height="1381" alt="Screenshot_2025-12-16_093448" src="https://github.com/user-attachments/assets/5e9d5c10-2e22-406c-bfc0-2ddcae6a20e7" />
 <img width="1014" height="1427" alt="Screenshot_2025-12-16_093515" src="https://github.com/user-attachments/assets/31f154d3-e3d2-4f7b-a8b2-264b11839b91" />
 <img width="1179" height="1462" alt="Screenshot_2025-12-16_093634" src="https://github.com/user-attachments/assets/cf2e7a84-a70d-4f51-8d6a-ae8233c15baa" />
 <img width="999" height="1414" alt="Screenshot_2025-12-16_093606" src="https://github.com/user-attachments/assets/e64cb317-3525-40a5-b6d2-5dcdb012ae52" />
