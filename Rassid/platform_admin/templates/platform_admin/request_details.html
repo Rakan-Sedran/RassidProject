@@ -60,7 +60,7 @@
 
                 <div style="margin-bottom: 20px;">
                     <label style="color: #888; font-size: 0.9rem;">Phone Number</label>
-                    <div style="color: #fff; font-size: 1.1rem;">{{ req.phone_number }}</div>
+                    <div style="color: #fff; font-size: 1.1rem;">{{ req.admin_phone }}</div>
                 </div>
 
                 <div style="margin-bottom: 20px;">
@@ -84,14 +84,68 @@
             </div>
         </div>
 
+          <div style="margin-bottom: 25px;">
+                <h3 style="color: #9b59b6; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 8px;">
+                     Submitted Files
+                </h3>
+                <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                     {% if req.official_license %}
+                         <a href="{{ req.official_license.url }}" data-file-url="{{ req.official_license.url }}" class="file-action-btn btn-view"
+                            title="View Official License">
+                            <span class="material-symbols-outlined">visibility</span>
+                            <span>View Official License</span>
+                         </a>
+                         <a href="{{ req.official_license.url }}" download class="file-action-btn btn-download"
+                            title="Download Official License">
+                            <span class="material-symbols-outlined">download</span>
+                            <span>Download</span>
+                         </a>
+
+                         {% with fname=req.official_license.name|lower %}
+                             {% if fname|slice:"-4:" == ".pdf" %}
+                                 <span class="file-badge pdf">PDF</span>
+                             {% elif fname|slice:"-4:" == ".jpg" or fname|slice:"-4:" == ".png" or fname|slice:"-5:" == ".jpeg" %}
+                                 <span class="file-badge img">IMG</span>
+                             {% else %}
+                                 <span class="file-badge other">FILE</span>
+                             {% endif %}
+                         {% endwith %}
+                     {% else %}
+                         <span style="color:#777;">No official license uploaded.</span>
+                     {% endif %}
+
+                     {% if req.commercial_record %}
+                         <a href="{{ req.commercial_record.url }}" data-file-url="{{ req.commercial_record.url }}" class="file-action-btn btn-view"
+                            title="View Commercial Record">
+                            <span class="material-symbols-outlined">visibility</span>
+                            <span>View Commercial Record</span>
+                         </a>
+                         <a href="{{ req.commercial_record.url }}" download class="file-action-btn btn-download"
+                            title="Download Commercial Record">
+                            <span class="material-symbols-outlined">download</span>
+                            <span>Download</span>
+                         </a>
+
+                         {% with fname=req.commercial_record.name|lower %}
+                             {% if fname|slice:"-4:" == ".pdf" %}
+                                 <span class="file-badge pdf">PDF</span>
+                             {% elif fname|slice:"-4:" == ".jpg" or fname|slice:"-4:" == ".png" or fname|slice:"-5:" == ".jpeg" %}
+                                 <span class="file-badge img">IMG</span>
+                             {% else %}
+                                 <span class="file-badge other">FILE</span>
+                             {% endif %}
+                         {% endwith %}
+                     {% endif %}
+                </div>
+          </div>
+
         <div
             style="border-top: 1px solid #333; padding-top: 30px; display: flex; gap: 15px; justify-content: flex-end;">
 
-            <a href="{% url 'admin_reject_request' req.id %}"
-                onclick="return confirm('Are you sure you want to reject this request?');"
-                style="padding: 12px 30px; background: rgba(255, 71, 87, 0.1); color: #ff4757; text-decoration: none; border-radius: 8px; font-weight: bold; border: 1px solid rgba(255, 71, 87, 0.3); transition: 0.3s;">
+            <button id="rejectBtn" type="button"
+                style="padding: 12px 30px; background: rgba(255, 71, 87, 0.12); color: #ff4757; text-decoration: none; border-radius: 8px; font-weight: bold; border: 1px solid rgba(255, 71, 87, 0.3); transition: 0.15s; cursor: pointer;">
                 Reject Request
-            </a>
+            </button>
 
             <a href="{% url 'admin_approve_request' req.id %}"
                 onclick="return confirm('Are you sure? This will create the airport and send login credentials.');"
@@ -100,7 +154,45 @@
             </a>
 
         </div>
+        <div id="rejectModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:2500; align-items:center; justify-content:center;">
+            <div style="width:min(640px,92vw); background:#111214; padding:18px; border-radius:10px; box-shadow:0 12px 40px rgba(0,0,0,0.6);">
+                <h3 style="color:#fff; margin:0 0 8px 0;">Reject Subscription Request</h3>
+                <p style="color:#bbb; margin:0 0 12px 0;">Inform the applicant and optionally edit the destination email.</p>
+                <form method="post" action="{% url 'admin_reject_request' req.id %}">
+                    {% csrf_token %}
+                    <div style="margin-bottom:10px;">
+                        <label style="color:#ddd; font-weight:700; display:block; margin-bottom:6px;">Send To (email)</label>
+                        <input type="email" name="email" value="{{ req.admin_email }}" required
+                               style="width:100%; padding:10px; border-radius:8px; border:1px solid #222; background:#0f1416; color:#fff;">
+                    </div>
+                    <div style="margin-bottom:14px;">
+                        <label style="color:#ddd; font-weight:700; display:block; margin-bottom:6px;">Reason (will be included in email)</label>
+                        <textarea name="reason" rows="4" placeholder="Provide reason for rejection"
+                                  style="width:100%; padding:10px; border-radius:8px; border:1px solid #222; background:#0f1416; color:#fff;"></textarea>
+                    </div>
+                    <div style="display:flex; gap:10px; justify-content:flex-end;">
+                        <button type="button" id="rejectCancel" style="padding:10px 16px; border-radius:8px; background:transparent; border:1px solid #333; color:#fff;">Cancel</button>
+                        <button type="submit" style="padding:10px 16px; border-radius:8px; background:linear-gradient(90deg,#ff6b6b,#ff4757); border:0; color:#fff; font-weight:800;">Send Rejection</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
     </div>
 </div>
+<script src="{% static 'js/file_preview.js' %}"></script>
+<script>
+    (function(){
+        const btn = document.getElementById('rejectBtn');
+        const modal = document.getElementById('rejectModal');
+        const cancel = document.getElementById('rejectCancel');
+        if(btn && modal){
+            btn.addEventListener('click', function(){ modal.style.display = 'flex'; });
+        }
+        if(cancel && modal){
+            cancel.addEventListener('click', function(){ modal.style.display = 'none'; });
+        }
+        document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && modal){ modal.style.display='none'; } });
+    })();
+</script>
 {% endblock %}
