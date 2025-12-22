@@ -10,11 +10,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.urls import reverse
 from django.utils.crypto import get_random_string
+from django.utils import timezone
 
 from .models import Airport, AirportSubscription, SubscriptionRequest
 from .serializers import AirportSerializer, AirportSubscriptionSerializer, SubscriptionRequestSerializer
 from .forms import AirportSignupForm
 from users.permissions import IsSuperAdmin
+from flights.models import Flight
+from tickets.models import Ticket
 
 User = get_user_model()
 
@@ -74,18 +77,46 @@ def request_subscription(request):
         form = AirportSignupForm(initial={'selected_plan': initial_plan})
 
     return render(request, 'airports/subscription_request.html', {'form': form})
+
 @login_required
 def dashboard(request):
-    if request.user.role != 'airport_admin':
+    if request.user.role != 'airport_admin' or not request.user.airport_id:
         return redirect('public_home')
-    return render(request, "airports/admin/dashboard.html")
+
+    my_airport = get_object_or_404(Airport, id=request.user.airport_id)
+    today = timezone.now().date()
+    now = timezone.now()
+
+    total_flights = Flight.objects.filter(origin=my_airport).count()
+    
+    today_flights = Flight.objects.filter(
+        origin=my_airport, 
+        scheduledDeparture__date=today
+    ).count()
+
+    total_tickets = Ticket.objects.filter(airport=my_airport).count()
+
+    upcoming_flights = Flight.objects.filter(
+        origin=my_airport,
+        scheduledDeparture__gte=now
+    ).order_by('scheduledDeparture')[:5]
+
+    context = {
+        'airport': my_airport,
+        'total_flights': total_flights,
+        'today_flights': today_flights,
+        'total_tickets': total_tickets,
+        'upcoming_flights': upcoming_flights,
+    }
+    
+    return render(request, "airports/dashboard.html", context)
 
 @login_required
 def employees_list(request):
     if request.user.role != 'airport_admin':
         return redirect('public_home')
     employees = User.objects.filter(role='operator', airport_id=request.user.airport_id)
-    return render(request, "airports/admin/employees_list.html", {"employees": employees})
+    return render(request, "airports/employees_list.html", {"employees": employees})
 
 @login_required
 def add_employee(request):
@@ -104,7 +135,56 @@ def add_employee(request):
             return redirect('airport_admin_employees')
         except:
             pass
-    return render(request, "airports/admin/add_employee.html")
+    return render(request, "airports/add_employee.html")
+
+@login_required
+def edit_employee(request, employee_id):
+    if request.user.role != 'airport_admin' or not request.user.airport_id:
+        return redirect('public_home')
+
+    employee = get_object_or_404(User, id=employee_id)
+
+    if employee.airport_id != request.user.airport_id:
+        messages.error(request, "You are not authorized to edit this employee.")
+        return redirect('airport_admin_employees')
+
+    if request.method == 'POST':
+        employee.first_name = request.POST.get('first_name')
+        employee.last_name = request.POST.get('last_name')
+        employee.email = request.POST.get('email')
+        employee.phone_number = request.POST.get('phone_number')
+        
+        employee.save()
+        messages.success(request, "Employee updated successfully.")
+        return redirect('airport_admin_employees')
+
+    my_airport = get_object_or_404(Airport, id=request.user.airport_id)
+
+    context = {
+        'employee': employee,
+        'airport': my_airport
+    }
+    return render(request, 'airports/edit_employee.html', context)
+@login_required
+def delete_employee(request, employee_id):
+    if request.user.role != 'airport_admin' or not request.user.airport_id:
+        messages.error(request, "Access denied.")
+        return redirect('public_home')
+
+    employee = get_object_or_404(User, id=employee_id)
+
+    if employee.airport_id != request.user.airport_id:
+        messages.error(request, "You cannot delete an employee from another airport.")
+        return redirect('airport_admin_employees')
+
+    if employee.id == request.user.id:
+        messages.error(request, "You cannot delete your own account.")
+        return redirect('airport_admin_employees')
+
+    employee.delete()
+    messages.success(request, "Employee deleted successfully.")
+    
+    return redirect('airport_admin_employees')
 
 @login_required
 def airport_settings(request):
@@ -116,7 +196,7 @@ def airport_settings(request):
     if airport_id:
         airport = get_object_or_404(Airport, id=airport_id)
         subscription = AirportSubscription.objects.filter(airport=airport).first()
-    return render(request, "airports/admin/airport_settings.html", {
+    return render(request, "airports/airport_settings.html", {
         "airport": airport,
         "subscription": subscription,
     })

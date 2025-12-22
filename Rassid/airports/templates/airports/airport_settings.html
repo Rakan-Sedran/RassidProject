@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container" style="padding-top: 50px; padding-bottom: 50px; max-width: 900px;">
+
+    <h2 style="color: white; font-weight: 800; margin-bottom: 30px;">Settings</h2>
+
+    <div class="glass-card" style="background: #1e2124; padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px;">
+        <h4 style="color: #00f260; margin-bottom: 20px;">Airport Information</h4>
+        
+        <div class="row mb-3">
+            <div class="col-md-4" style="color: #888;">Airport Name</div>
+            <div class="col-md-8" style="color: white; font-weight: bold;">{{ airport.name }}</div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4" style="color: #888;">IATA Code</div>
+            <div class="col-md-8" style="color: white;">
+                <span style="background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px;">{{ airport.code }}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4" style="color: #888;">Location</div>
+            <div class="col-md-8" style="color: white;">{{ airport.city }}, {{ airport.country }}</div>
+        </div>
+    </div>
+
+    <div class="glass-card" style="background: #1e2124; padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+        <h4 style="color: #0575e6; margin-bottom: 20px;">Subscription Plan</h4>
+        
+        <div class="row mb-3">
+            <div class="col-md-4" style="color: #888;">Current Plan</div>
+            <div class="col-md-8" style="color: white;">
+                {% if subscription %}
+                    {{ subscription.plan_type }}
+                {% else %}
+                    No Active Subscription
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4" style="color: #888;">Status</div>
+            <div class="col-md-8">
+                {% if subscription and subscription.status == 'active' %}
+                    <span style="color: #00f260;">Active</span>
+                {% else %}
+                    <span style="color: #ff4757;">Inactive</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4" style="color: #888;">Expires At</div>
+            <div class="col-md-8" style="color: white;">{{ subscription.expire_at|date:"Y-m-d" }}</div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
