@@ -30,25 +30,27 @@
 
             <div class="nav-right">
                 {% if user.is_authenticated %}
-                {% if user.is_superuser %}
-                <a href="{% url 'admin:index' %}" class="nav-link"
-                    style="color: #ff4757; font-weight: 600;">Dashboard</a>
-                {% endif %}
-                {% if user.is_superuser %}
-                <a href="{% url 'admin_requests_list' %}">
-                    <span class="material-symbols-outlined">inbox</span>
-                    <span>Requests</span>
-                </a>
-                {% endif %}
+                    
+                    {% if user.is_superuser %}
+                    <a href="{% url 'platform_dashboard' %}" class="nav-link"
+                        style="color: #ff4757; font-weight: 600;">Dashboard</a>
+                    {% endif %}
 
-                <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="nav-login-btn"
-                        style="background-color: #2d3436; margin-left: 10px;">Logout</button>
-                </form>
+                    {% if user.is_superuser %}
+                    <a href="{% url 'admin_requests_list' %}" class="nav-link" style="display: flex; align-items: center; gap: 5px;">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">inbox</span>
+                        <span>Requests</span>
+                    </a>
+                    {% endif %}
+
+                    <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-login-btn"
+                            style="background-color: #2d3436; margin-left: 10px; cursor: pointer;">Logout</button>
+                    </form>
 
                 {% else %}
-                <a href="{% url 'users:login' %}" class="nav-login-btn">Login</a>
+                    <a href="{% url 'users:login' %}" class="nav-login-btn">Login</a>
                 {% endif %}
             </div>
 
@@ -66,23 +68,24 @@
         <a href="{% url 'public_airports_list' %}">Airports</a>
 
         {% if user.is_authenticated %}
-        {% if user.is_superuser %}
-        <a href="{% url 'admin:index' %}" style="color: #ff4757;">Dashboard</a>
-        {% endif %}
-        {% if user.is_superuser %}
-        <a href="{% url 'admin_requests_list' %}">
-            <span class="material-symbols-outlined">inbox</span>
-            <span>Requests</span>
-        </a>
-        {% endif %}
+            {% if user.is_superuser %}
+                <a href="{% url 'platform_dashboard' %}" style="color: #ff4757;">Dashboard</a>
+            {% endif %}
+            
+            {% if user.is_superuser %}
+                <a href="{% url 'admin_requests_list' %}">
+                    <span class="material-symbols-outlined">inbox</span>
+                    <span>Requests</span>
+                </a>
+            {% endif %}
 
-        <form action="{% url 'users:logout' %}" method="post" style="width: 100%;">
-            {% csrf_token %}
-            <button type="submit" class="mobile-login"
-                style="width: 100%; text-align: left; background: none; border: none; color: white; font-size: 1rem; cursor: pointer; padding: 1rem 1.5rem;">Logout</button>
-        </form>
+            <form action="{% url 'users:logout' %}" method="post" style="width: 100%;">
+                {% csrf_token %}
+                <button type="submit" class="mobile-login"
+                    style="width: 100%; text-align: left; background: none; border: none; color: white; font-size: 1rem; cursor: pointer; padding: 1rem 1.5rem;">Logout</button>
+            </form>
         {% else %}
-        <a href="{% url 'users:login' %}" class="mobile-login">Login</a>
+            <a href="{% url 'users:login' %}" class="mobile-login">Login</a>
         {% endif %}
     </div>
 

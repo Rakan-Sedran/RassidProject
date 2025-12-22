@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/admin_requests.css' %}">
+
+<div class="dashboard-container" style="max-width: 1000px;">
+
+    <div class="mb-4">
+        <a href="{% url 'platform_dashboard' %}" class="btn-action" style="display: inline-flex; align-items: center; gap: 5px;">
+            <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="glass-card mb-5">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>{{ airport.name }} <span class="code-badge">{{ airport.code }}</span></h3>
+            <span class="status-badge active">Active</span>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; color: #ddd;">
+            <div>
+                <label style="color: #888; display: block; font-size: 0.85rem;">Location</label>
+                <div style="font-size: 1.1rem;">{{ airport.city }}, {{ airport.country }}</div>
+            </div>
+            <div>
+                <label style="color: #888; display: block; font-size: 0.85rem;">Created At</label>
+                <div style="font-size: 1.1rem;">{{ airport.created_at|date:"Y-m-d" }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card mb-5">
+        <div class="card-header">
+            <h3>Subscription Management</h3>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border: 1px solid #333;">
+                <label style="color: #888; font-size: 0.8rem;">Current Plan</label>
+                <div style="color: white; font-weight: bold; font-size: 1.1rem;">
+                    {{ subscription.plan_type|default:"No Active Plan" }}
+                </div>
+            </div>
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border: 1px solid #333;">
+                <label style="color: #888; font-size: 0.8rem;">Expiry Date</label>
+                <div style="color: white; font-weight: bold; font-size: 1.1rem;">
+                    {{ subscription.expire_at|date:"Y-m-d" }}
+                </div>
+            </div>
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border: 1px solid #333;">
+                <label style="color: #888; font-size: 0.8rem;">Status</label>
+                <div style="color: #2ecc71; font-weight: bold; font-size: 1.1rem;">
+                    {{ subscription.status|title }}
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-action">Renew Subscription</button>
+            <button class="btn-action warning">Modify Plan</button>
+            <button class="btn-action danger">Suspend Service</button>
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <div class="card-header">
+            <h3>Admin Information</h3>
+        </div>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th style="text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if admin_user %}
+                <tr>
+                    <td style="color: white;">Airport Admin</td>
+                    <td>{{ admin_user.email }}</td>
+                    <td style="text-align: right;">
+                        <button class="btn-action warning">Reset Password</button>
+                        <button class="btn-action danger">Disable Account</button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="3" style="text-align: center; color: #666;">No admin assigned</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

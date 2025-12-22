@@ -5,8 +5,6 @@ from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from django.db import transaction
 from datetime import timedelta
 import random
@@ -26,18 +24,31 @@ def admin_dashboard(request):
     if not is_super_admin(request.user):
         return redirect('public_home')
 
-    airports_count = Airport.objects.count()
-    subscriptions_count = AirportSubscription.objects.count()
-    flights_count = Flight.objects.count()
-    tickets_count = Ticket.objects.count()
-    pending_requests = SubscriptionRequest.objects.filter(status='pending').count()
+    stats = {
+        "airports_count": Airport.objects.count(),
+        "active_subscriptions": AirportSubscription.objects.filter(status='active').count(),
+        "employees_count": User.objects.filter(role='airport_staff').count(),
+        "passengers_today": 45231,
+        "sms_delivered": 44892,
+        "api_errors": 23,
+        "system_uptime": "99.8%"
+    }
+
+    latest_airports = Airport.objects.all().order_by('-id')[:5]
+    
+    admins = User.objects.filter(role='airport_admin')[:5]
+
+    tickets = [
+        {'id': 'ST001', 'airport': 'King Fahd Int', 'title': 'API timeout issues', 'priority': 'High', 'status': 'Open'},
+        {'id': 'ST002', 'airport': 'Heathrow', 'title': 'SMS delivery delays', 'priority': 'Medium', 'status': 'Open'},
+        {'id': 'ST003', 'airport': 'JFK Int', 'title': 'Dashboard loading slow', 'priority': 'Low', 'status': 'Open'},
+    ]
 
     context = {
-        "airports_count": airports_count,
-        "subscriptions_count": subscriptions_count,
-        "flights_count": flights_count,
-        "tickets_count": tickets_count,
-        "pending_requests": pending_requests,
+        "stats": stats,
+        "latest_airports": latest_airports,
+        "admins": admins,
+        "tickets": tickets
     }
     return render(request, "platform_admin/dashboard.html", context)
 
@@ -74,25 +85,21 @@ def approve_request(request, request_id):
             messages.error(request, "A user with this email already exists.")
             return redirect('admin_requests_list')
 
-        print(f"DEBUG: Creating airport for {sub_req.airport_name}...")
         airport = Airport.objects.create(
             name=sub_req.airport_name,
             code=sub_req.airport_code,
             city=sub_req.city,
             country=sub_req.country
         )
-        print("DEBUG: Airport created.")
 
         password = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
         
-        print("DEBUG: Creating user...")
         user = User.objects.create_user(
             email=sub_req.admin_email,
             password=password,
             role='airport_admin',
             airport_id=airport.id
         )
-        print("DEBUG: User created.")
         
         years = 1
         if sub_req.selected_plan == '3_years':
@@ -131,17 +138,11 @@ Please login and change your password immediately.
 Regards,
 RASSID Team
 """
-        print("DEBUG: Sending email...")
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [sub_req.admin_email], fail_silently=False)
-        print("DEBUG: Email sent.")
 
         messages.success(request, f"Airport {airport.name} approved and credentials sent!")
         
     except Exception as e:
-        # Rollback any DB changes if something fails (e.g. creating User or sending email)
-        print(f"DEBUG: Exception occurred: {e}")
-        import traceback
-        traceback.print_exc()
         transaction.set_rollback(True)
         messages.error(request, f"Error: {str(e)}")
         
@@ -197,3 +198,17 @@ def system_errors(request):
     return render(request, "platform_admin/system_errors.html", {
         "errors": errors,
     })
+
+@login_required
+def airport_details(request, id):
+    if not is_super_admin(request.user):
+        return redirect('public_home')
+    airport = get_object_or_404(Airport, id=id)
+    subscription = AirportSubscription.objects.filter(airport=airport, status='active').first()
+    admin_user = User.objects.filter(airport_id=airport.id, role='airport_admin').first()
+    context = {
+        'airport': airport,
+        'subscription': subscription,
+        'admin_user': admin_user,
+    }
+    return render(request, 'platform_admin/airport_details.html', context)
