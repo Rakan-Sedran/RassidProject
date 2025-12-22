@@ -1,17 +1,17 @@
 from rest_framework import serializers
-from .models import Airport, AirportSubscription, AirportUser
+from .models import Airport, AirportSubscription, SubscriptionRequest
 
 class AirportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airport
-        fields = "__all__"
+        fields = 'all'
 
 class AirportSubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AirportSubscription
-        fields = "__all__"
+        fields = 'all'
 
-class AirportUserSerializer(serializers.ModelSerializer):
+class SubscriptionRequestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AirportUser
-        fields = "__all__"
+        model = SubscriptionRequest
+        fields = 'all'

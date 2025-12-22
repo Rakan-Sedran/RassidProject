@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="registration-page-wrapper">
+
+    <div class="registration-card">
+        <h1 class="reg-title">Join RASSID Platform</h1>
+        <p class="reg-subtitle">Please fill in your airport details and upload the required documents.</p>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div
+            style="padding: 15px; background: rgba(0, 242, 96, 0.1); border: 1px solid #00f260; color: #00f260; border-radius: 8px; margin-bottom: 20px;">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <h3 style="color: #fff; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;">Airport
+                Information</h3>
+            <div class="form-grid">
+                <div>
+                    <label class="form-label">Airport Name</label>
+                    {{ form.airport_name }}
+                </div>
+                <div>
+                    <label class="form-label">IATA Code</label>
+                    {{ form.airport_code }}
+                </div>
+                <div>
+                    <label class="form-label">Country</label>
+                    {{ form.country }}
+                </div>
+                <div>
+                    <label class="form-label">City</label>
+                    {{ form.city }}
+                </div>
+            </div>
+
+            <h3
+                style="color: #fff; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 30px;">
+                Contact Person</h3>
+            <div class="form-grid">
+                <div>
+                    <label class="form-label">Admin Email</label>
+                    {{ form.admin_email }}
+                </div>
+                <div>
+                    <label class="form-label">Phone Number</label>
+                    {{ form.admin_phone }}
+                </div>
+            </div>
+
+            <h3
+                style="color: #fff; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 30px;">
+                Plan & Documents</h3>
+            <div style="margin-bottom: 20px;">
+                <label class="form-label">Selected Plan</label>
+                {{ form.selected_plan }}
+            </div>
+
+            <div class="form-grid">
+                <div>
+                    <label class="form-label">Operating License (PDF/Img)</label>
+                    {{ form.official_license }}
+                </div>
+                <div>
+                    <label class="form-label">Commercial Record (Optional)</label>
+                    {{ form.commercial_record }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit-req">
+                Submit Application
+            </button>
+        </form>
+    </div>
+</section>
+{% endblock %}

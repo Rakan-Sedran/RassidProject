@@ -1,19 +1,42 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import generics
-from django.contrib.auth import authenticate
-from rest_framework_simplejwt.tokens import RefreshToken
-from .models import User
-from .serializers import UserSerializer
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.urls import reverse
 
-class LoginView(APIView):
-    def post(self, request):
-        user = authenticate(email=request.data.get("email"), password=request.data.get("password"))
-        if not user:
-            return Response({"detail": "invalid credentials"}, status=400)
-        token = RefreshToken.for_user(user)
-        return Response({"access": str(token.access_token), "refresh": str(token)})
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect_user_based_on_role(request.user)
 
-class UserListView(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=email, password=password)
+
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return redirect_user_based_on_role(user)
+            else:
+                messages.error(request, "This account is inactive.")
+        else:
+            messages.error(request, "Invalid email or password.")
+
+    return render(request, 'users/login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('users:login')
+
+def redirect_user_based_on_role(user):
+    if user.role == 'superadmin':
+        return redirect('public_home')
+
+    elif user.role == 'airport_admin':
+        return redirect('public_home') 
+
+    elif user.role == 'operator':
+        return redirect('operator_dashboard')
+
+    else:
+        return redirect('public_home')

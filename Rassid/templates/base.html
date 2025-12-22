@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RASSID</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/public.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+
+<body>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="{% url 'public_home' %}" class="logo">RASSID</a>
+            </div>
+
+            <div class="nav-center">
+                <a href="{% url 'public_home' %}" class="nav-link">Overview</a>
+                <a href="{% url 'public_flights_list' %}" class="nav-link">Live Map</a>
+                <a href="{% url 'public_airports_list' %}" class="nav-link">Airports</a>
+            </div>
+
+            <div class="nav-right">
+                {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                <a href="{% url 'admin:index' %}" class="nav-link"
+                    style="color: #ff4757; font-weight: 600;">Dashboard</a>
+                {% endif %}
+                {% if user.is_superuser %}
+                <a href="{% url 'admin_requests_list' %}">
+                    <span class="material-symbols-outlined">inbox</span>
+                    <span>Requests</span>
+                </a>
+                {% endif %}
+
+                <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-login-btn"
+                        style="background-color: #2d3436; margin-left: 10px;">Logout</button>
+                </form>
+
+                {% else %}
+                <a href="{% url 'users:login' %}" class="nav-login-btn">Login</a>
+                {% endif %}
+            </div>
+
+            <button class="mobile-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="{% url 'public_home' %}">Overview</a>
+        <a href="{% url 'public_flights_list' %}">Live Map</a>
+        <a href="{% url 'public_airports_list' %}">Airports</a>
+
+        {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+        <a href="{% url 'admin:index' %}" style="color: #ff4757;">Dashboard</a>
+        {% endif %}
+        {% if user.is_superuser %}
+        <a href="{% url 'admin_requests_list' %}">
+            <span class="material-symbols-outlined">inbox</span>
+            <span>Requests</span>
+        </a>
+        {% endif %}
+
+        <form action="{% url 'users:logout' %}" method="post" style="width: 100%;">
+            {% csrf_token %}
+            <button type="submit" class="mobile-login"
+                style="width: 100%; text-align: left; background: none; border: none; color: white; font-size: 1rem; cursor: pointer; padding: 1rem 1.5rem;">Logout</button>
+        </form>
+        {% else %}
+        <a href="{% url 'users:login' %}" class="mobile-login">Login</a>
+        {% endif %}
+    </div>
+
+    <main>
+        {% if messages %}
+        <div class="messages-container" style="max-width: 1200px; margin: 2rem auto; padding: 0 2rem;">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h2>RASSID</h2>
+                <p>Advanced Airport Operations Platform.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Contact Support</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 RASSID System. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/navbar.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-header airports-header-bg">
+    <div class="plane-animation-container">
+        <span class="material-symbols-outlined flying-plane">flight</span>
+        <span class="material-symbols-outlined flying-plane plane-2">flight</span>
+    </div>
+
+    <div class="container" style="position: relative; z-index: 2;">
+        <h1>Our Partner Airports</h1>
+        <p>Airports currently powered by our platform</p>
+    </div>
+</div>
+
+<div class="container" style="margin-bottom: 80px; position: relative; z-index: 2; margin-top: -50px;">
+    <div class="airports-grid">
+
+        <div class="airport-card">
+            <div class="ac-image"
+                style="background-image: url('https://images.unsplash.com/photo-1575988585250-8b17b2b7336f?q=80&w=1000&auto=format&fit=crop');">
+                <div class="ac-badge status-active">Active Partner</div>
+            </div>
+            <div class="ac-content">
+                <div class="ac-header">
+                    <h2>Riyadh</h2>
+                    <span class="code">RUH</span>
+                </div>
+                <p class="ac-name">King Khalid International Airport</p>
+                <div class="ac-meta simple-meta">
+                    <span><span class="material-symbols-outlined">flight_takeoff</span> Daily Flights: 120+</span>
+                    <span><span class="material-symbols-outlined">dns</span> Managed Terminals: 3</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="airport-card">
+            <div class="ac-image"
+                style="background-image: url('https://images.unsplash.com/photo-1569629743817-70d8db6c323b?q=80&w=1000&auto=format&fit=crop');">
+                <div class="ac-badge status-active">Active Partner</div>
+            </div>
+            <div class="ac-content">
+                <div class="ac-header">
+                    <h2>Jeddah</h2>
+                    <span class="code">JED</span>
+                </div>
+                <p class="ac-name">King Abdulaziz International Airport</p>
+                <div class="ac-meta simple-meta">
+                    <span><span class="material-symbols-outlined">flight_takeoff</span> Daily Flights: 180+</span>
+                    <span><span class="material-symbols-outlined">dns</span> Managed Terminals: 1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="airport-card">
+            <div class="ac-image"
+                style="background-image: url('https://images.unsplash.com/photo-1530521954074-e64f6810b32d?q=80&w=1000&auto=format&fit=crop');">
+                <div class="ac-badge status-new">New Partner</div>
+            </div>
+            <div class="ac-content">
+                <div class="ac-header">
+                    <h2>Dammam</h2>
+                    <span class="code">DMM</span>
+                </div>
+                <p class="ac-name">King Fahd International Airport</p>
+                <div class="ac-meta simple-meta">
+                    <span><span class="material-symbols-outlined">flight_takeoff</span> Daily Flights: 85+</span>
+                    <span><span class="material-symbols-outlined">dns</span> Managed Terminals: 2</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

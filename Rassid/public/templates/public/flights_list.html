@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1>Live Flight Tracker</h1>
+        <p>Real-time departure and arrival information</p>
+    </div>
+</div>
+
+<div class="flights-container">
+    <div class="flight-controls">
+        <div class="search-box">
+            <span class="material-symbols-outlined">search</span>
+            <input type="text" placeholder="Search flight number or city...">
+        </div>
+        <div class="filter-tabs">
+            <button class="tab active">All Flights</button>
+            <button class="tab">Departures</button>
+            <button class="tab">Arrivals</button>
+        </div>
+    </div>
+
+    <div class="flights-list">
+        <div class="flight-card">
+            <div class="fc-time">
+                <span class="time">10:45 AM</span>
+                <span class="date">Today</span>
+            </div>
+            <div class="fc-info">
+                <div class="route">
+                    <span class="city">Riyadh (RUH)</span>
+                    <span class="material-symbols-outlined arrow">arrow_forward</span>
+                    <span class="city">London (LHR)</span>
+                </div>
+                <div class="details">
+                    <span class="flight-no">SV 112</span>
+                    <span class="airline">Saudia</span>
+                </div>
+            </div>
+            <div class="fc-gate">
+                <span class="label">Gate</span>
+                <span class="value">B05</span>
+            </div>
+            <div class="fc-status status-boarding">
+                Boarding
+            </div>
+        </div>
+
+        <div class="flight-card">
+            <div class="fc-time">
+                <span class="time">11:30 AM</span>
+                <span class="date">Today</span>
+            </div>
+            <div class="fc-info">
+                <div class="route">
+                    <span class="city">Riyadh (RUH)</span>
+                    <span class="material-symbols-outlined arrow">arrow_forward</span>
+                    <span class="city">Dubai (DXB)</span>
+                </div>
+                <div class="details">
+                    <span class="flight-no">EK 819</span>
+                    <span class="airline">Emirates</span>
+                </div>
+            </div>
+            <div class="fc-gate">
+                <span class="label">Gate</span>
+                <span class="value">A12</span>
+            </div>
+            <div class="fc-status status-delayed">
+                Delayed
+            </div>
+        </div>
+
+        <div class="flight-card">
+            <div class="fc-time">
+                <span class="time">01:15 PM</span>
+                <span class="date">Today</span>
+            </div>
+            <div class="fc-info">
+                <div class="route">
+                    <span class="city">Riyadh (RUH)</span>
+                    <span class="material-symbols-outlined arrow">arrow_forward</span>
+                    <span class="city">Jeddah (JED)</span>
+                </div>
+                <div class="details">
+                    <span class="flight-no">XY 440</span>
+                    <span class="airline">Flynas</span>
+                </div>
+            </div>
+            <div class="fc-gate">
+                <span class="label">Gate</span>
+                <span class="value">C03</span>
+            </div>
+            <div class="fc-status status-ontime">
+                On Time
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

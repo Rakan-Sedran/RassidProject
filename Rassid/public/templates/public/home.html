@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="startup-plane-container">
+    <span class="material-symbols-outlined plane-icon">flight</span>
+    <div class="plane-trail"></div>
+</div>
+
+<section class="hero-full">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+        <span class="hero-tag fade-in">Smart Airport System</span>
+        <h1 class="hero-title fade-in delay-1">
+            Future of<br>
+            Aviation Control.
+        </h1>
+        <p class="hero-desc fade-in delay-2">
+            Seamlessly track flights, manage terminals, and notify passengers in real-time.
+            Experience the next generation of airport intelligence.
+        </p>
+
+        <div class="hero-actions fade-in delay-3" style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <a href="{% url 'public_flights_list' %}" class="btn-primary">
+                <span class="material-symbols-outlined">flight_takeoff</span> Track Flight
+            </a>
+            <a href="{% url 'public_airports_list' %}" class="btn-outline">
+                <span class="material-symbols-outlined">travel_explore</span> Explore Airports
+            </a>
+            <a href="{% url 'pricing' %}" class="join-btn"
+                style="margin-top: 0; display: inline-flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined">rocket_launch</span> Join Us
+            </a>
+        </div>
+    </div>
+
+    <div class="hero-visual fade-in delay-3">
+        <div class="glass-card card-1">
+            <div class="card-icon">
+                <span class="material-symbols-outlined">flight</span>
+            </div>
+            <div class="card-info">
+                <span>Riyadh (RUH)</span>
+                <strong>Departing</strong>
+            </div>
+        </div>
+        <div class="glass-card card-2">
+            <div class="card-icon">
+                <span class="material-symbols-outlined">notifications_active</span>
+            </div>
+            <div class="card-info">
+                <span>Gate Change</span>
+                <strong>Gate A12 → B05</strong>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="services-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Our Services</h2>
+            <p>Comprehensive solutions for modern aviation management</p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="s-icon">
+                    <span class="material-symbols-outlined">radar</span>
+                </div>
+                <h3>Live Tracking</h3>
+                <p>Real-time updates on flight status, gates, and terminals directly from the control tower.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="s-icon">
+                    <span class="material-symbols-outlined">mark_email_unread</span>
+                </div>
+                <h3>Smart Alerts</h3>
+                <p>Instant SMS and Email notifications for passengers whenever there is a gate change.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="s-icon">
+                    <span class="material-symbols-outlined">analytics</span>
+                </div>
+                <h3>Operator Dashboard</h3>
+                <p>Full control panel for airport staff to manage schedules and passenger flow efficiently.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
