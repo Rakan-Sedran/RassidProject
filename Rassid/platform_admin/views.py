@@ -189,35 +189,49 @@ RASSID Team
 def reject_request(request, request_id):
     if not is_super_admin(request.user):
         return redirect('public_home')
-        
     sub_req = get_object_or_404(SubscriptionRequest, id=request_id)
-    sub_req.status = 'rejected'
-    sub_req.reviewed_by = request.user
-    sub_req.save()
-    
-    try:
-        send_mail(
-            "Update on your RASSID Subscription Request",
-            f"Dear Applicant,\n\nUnfortunately, we could not approve your request for {sub_req.airport_name}.\nContact support for details.",
-            settings.DEFAULT_FROM_EMAIL,
-            [sub_req.admin_email],
-            fail_silently=False
-        )
-        EmailLog.objects.create(
-            recipient=sub_req.admin_email,
-            subject="Request Rejected",
-            status="Sent"
-        )
-    except Exception as e:
-        EmailLog.objects.create(
-            recipient=sub_req.admin_email,
-            subject="Request Rejected",
-            status="Failed",
-            error_message=str(e)
-        )
 
-    messages.info(request, "Request has been rejected.")
-    return redirect('admin_requests_list')
+    if request.method == 'POST':
+        reason = request.POST.get('reason', '').strip()
+        to_email = request.POST.get('email', sub_req.admin_email).strip() or sub_req.admin_email
+
+        sub_req.status = 'rejected'
+        sub_req.reviewed_by = request.user
+        sub_req.save()
+
+        subject = "Update on your RASSID Subscription Request"
+        message = f"Dear Applicant,\n\nUnfortunately, we could not approve your request for {sub_req.airport_name}.\n\n"
+        if reason:
+            message += f"Reason provided by admin:\n{reason}\n\n"
+        message += "Please contact support for more details.\n\nRegards,\nRASSID Team"
+
+        try:
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [to_email],
+                fail_silently=False
+            )
+            EmailLog.objects.create(
+                recipient=to_email,
+                subject="Request Rejected",
+                status="Sent"
+            )
+            messages.success(request, "Request rejected and email sent to applicant.")
+        except Exception as e:
+            EmailLog.objects.create(
+                recipient=to_email,
+                subject="Request Rejected",
+                status="Failed",
+                error_message=str(e)
+            )
+            messages.warning(request, f"Request rejected but email failed to send: {e}")
+
+        return redirect('admin_requests_list')
+
+    # If not POST, redirect back to details page
+    return redirect('admin_request_details', request_id)
 
 @login_required
 def airports(request):
