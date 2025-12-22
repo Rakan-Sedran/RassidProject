@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container" style="padding-top: 80px; padding-bottom: 50px; max-width: 600px;">
+
+    <div class="glass-card" style="background: #1e2124; padding: 40px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+        
+        <h3 style="color: white; font-weight: 800; margin-bottom: 30px; text-align: center;">Add New Employee</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-4">
+                <label style="color: #ccc; margin-bottom: 10px;">Email Address</label>
+                <input type="email" name="email" class="form-control" required 
+                       style="background: #2b2e33; border: 1px solid #444; color: white; padding: 12px;">
+            </div>
+
+            <div class="mb-4">
+                <label style="color: #ccc; margin-bottom: 10px;">Password</label>
+                <input type="password" name="password" class="form-control" required 
+                       style="background: #2b2e33; border: 1px solid #444; color: white; padding: 12px;">
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary" 
+                        style="background: linear-gradient(135deg, #00f260, #0575e6); border: none; padding: 12px; font-weight: bold;">
+                    Create Account
+                </button>
+                <a href="{% url 'airport_admin_employees' %}" class="btn btn-outline-light" style="border: none;">Cancel</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

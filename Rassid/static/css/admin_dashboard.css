@@ -1,0 +1,205 @@
+body {
+    background-color: #f5f6f8 !important;
+}
+
+nav, #navbar, .navbar {
+    background-color: #1a1c20 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
+}
+
+#navbar a, 
+.nav-link, 
+.navbar-brand, 
+.material-symbols-outlined, 
+.logo {
+    color: white !important;
+}
+
+.admin-page-container {
+    padding-top: 120px !important;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.admin-card {
+    background-color: #1a1c20 !important; 
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    color: white;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #fff;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 15px;
+    text-align: left;
+}
+
+.admin-form-label {
+    color: #cbd5e1;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.admin-input {
+    background-color: #23262b !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    padding: 12px 15px;
+    border-radius: 8px;
+    width: 100%;
+    outline: none;
+    transition: 0.3s;
+}
+
+.admin-input:focus {
+    border-color: #2dce89 !important;
+    box-shadow: 0 0 0 3px rgba(45, 206, 137, 0.1);
+}
+
+.btn-save-hero {
+    background: linear-gradient(135deg, #2dce89 0%, #2dcecc 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 700;
+    width: 100%;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-save-hero:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(45, 206, 137, 0.3);
+}
+
+.back-link {
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.3s;
+}
+
+.back-link:hover {
+    color: #333;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: separate; 
+    border-spacing: 0 10px;
+    margin-top: 10px;
+}
+
+.admin-table th {
+    color: #6c757d; 
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 15px 20px;
+    border: none;
+    text-align: left;
+}
+
+.admin-table tbody tr {
+    background-color: #23262b;
+    transition: transform 0.2s;
+}
+
+.admin-table tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.admin-table td {
+    padding: 20px;
+    vertical-align: middle;
+    color: white;
+    font-size: 0.95rem;
+    border: none;
+}
+
+.admin-table td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+.admin-table td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.status-active {
+    background-color: rgba(45, 206, 137, 0.15);
+    color: #2dce89;
+    border: 1px solid rgba(45, 206, 137, 0.2);
+}
+
+.status-inactive {
+    background-color: rgba(252, 92, 101, 0.15);
+    color: #fc5c65;
+    border: 1px solid rgba(252, 92, 101, 0.2);
+}
+
+.btn-admin-action {
+    background-color: #363a40;
+    color: #fff !important;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    margin-right: 5px;
+    display: inline-block;
+    transition: 0.2s;
+}
+
+.btn-admin-action:hover {
+    background-color: #484d55;
+}
+
+.btn-delete {
+    color: #ff6b6b !important;
+}
+
+.btn-delete:hover {
+    background-color: rgba(255, 107, 107, 0.1);
+}
+
+.btn-add-hero {
+    background-color: #2dce89;
+    color: white !important;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(45, 206, 137, 0.3);
+    display: inline-block;
+}
+
+.btn-add-hero:hover {
+    background-color: #26af74;
+    transform: translateY(-1px);
+}

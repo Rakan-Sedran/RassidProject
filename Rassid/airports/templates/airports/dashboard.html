@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="row align-items-center mb-5">
+        <div class="col-md-8">
+            <h2 class="fw-bold text-white">Dashboard</h2>
+            <p class="text-muted mb-0">
+                Welcome back, <span class="text-success">{{ request.user.email }}</span>
+            </p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <div class="airport-badge">
+                <h3 class="text-white mb-1">{{ airport.name }}</h3>
+                <span class="badge bg-secondary opacity-75">{{ airport.code }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="glass-card h-100 p-4">
+                <div class="d-flex flex-column">
+                    <span class="text-muted small text-uppercase mb-2">Total Flights</span>
+                    <h2 class="text-white fw-bold m-0">{{ total_flights }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass-card h-100 p-4">
+                <div class="d-flex flex-column">
+                    <span class="text-muted small text-uppercase mb-2">Flights Today</span>
+                    <h2 class="text-white fw-bold m-0">{{ today_flights }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="glass-card h-100 p-4">
+                <div class="d-flex flex-column">
+                    <span class="text-muted small text-uppercase mb-2">Total Tickets</span>
+                    <h2 class="text-white fw-bold m-0">{{ total_tickets }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <h4 class="text-white mb-4">Upcoming Departures</h4>
+            
+            <div class="glass-card p-4">
+                {% if upcoming_flights %}
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0 align-middle">
+                        <thead>
+                            <tr class="text-muted small text-uppercase">
+                                <th scope="col">Flight No.</th>
+                                <th scope="col">Destination</th>
+                                <th scope="col">Scheduled</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for flight in upcoming_flights %}
+                            <tr>
+                                <td class="fw-bold text-white">{{ flight.flightNumber }}</td>
+                                
+                                <td>
+                                    <span class="d-block text-white">{{ flight.destination.city }}</span>
+                                    <small class="text-muted">{{ flight.destination.code }}</small>
+                                </td>
+                                
+                                <td class="text-white">{{ flight.scheduledDeparture|date:"H:i" }}</td>
+                                
+                                <td>
+                                    {% if flight.status == 'Active' %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% elif flight.status == 'Canceled' %}
+                                        <span class="badge bg-danger">Canceled</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ flight.status }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <p class="text-muted mb-0">No upcoming flights found at the moment.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

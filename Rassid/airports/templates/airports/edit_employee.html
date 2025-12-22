@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container admin-page-container">
+
+    <div class="mb-4">
+        <a href="{% url 'airport_admin_employees' %}" class="back-link mb-2">
+            <span class="material-symbols-outlined" style="font-size: 1.1rem;">arrow_back</span>
+            Back to List
+        </a>
+        <h2 class="fw-bold text-dark">Edit Employee</h2>
+    </div>
+
+    <div class="admin-card">
+        
+        <div class="section-title">Employee Details</div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <label class="admin-form-label">First Name</label>
+                    <input type="text" name="first_name" value="{{ employee.first_name }}" class="admin-input" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="admin-form-label">Last Name</label>
+                    <input type="text" name="last_name" value="{{ employee.last_name }}" class="admin-input" required>
+                </div>
+
+                <div class="col-12">
+                    <label class="admin-form-label">Email Address</label>
+                    <input type="email" name="email" value="{{ employee.email }}" class="admin-input" required>
+                </div>
+
+                <div class="col-12">
+                    <label class="admin-form-label">Phone Number</label>
+                    <input type="text" name="phone_number" value="{{ employee.phone_number|default:'' }}" class="admin-input">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-save-hero">
+                Save Changes
+            </button>
+        </form>
+
+    </div>
+</div>
+{% endblock %}
