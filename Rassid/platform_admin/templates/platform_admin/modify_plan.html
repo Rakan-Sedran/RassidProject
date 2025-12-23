@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="dashboard-container" style="max-width: 600px;">
+    <div class="glass-card">
+        <div class="card-header">
+            <h3>Modify Plan: {{ airport.name }}</h3>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: #cbd5e1;">Select New Plan</label>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    {% for code, label in plans %}
+                    <label class="glass-card plan-selector {% if subscription.plan_type == code %}active{% endif %}"
+                        style="padding: 15px; cursor: pointer;">
+                        <input type="radio" name="plan_type" value="{{ code }}" {% if subscription.plan_type == code %}checked{% endif %} style="margin-right: 10px;">
+                        {{ label }}
+                        {% if subscription.plan_type == code %} (Current) {% endif %}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="submit" class="btn-action primary" style="width: 100%;">Update Plan</button>
+                <a href="{% url 'admin_airport_details' airport.id %}" class="btn-action danger"
+                    style="width: 100%; text-align: center; text-decoration: none;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -2,16 +2,18 @@ body {
     background-color: #f5f6f8 !important;
 }
 
-nav, #navbar, .navbar {
+nav,
+#navbar,
+.navbar {
     background-color: #1a1c20 !important;
-    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
 }
 
-#navbar a, 
-.nav-link, 
-.navbar-brand, 
-.material-symbols-outlined, 
+#navbar a,
+.nav-link,
+.navbar-brand,
+.material-symbols-outlined,
 .logo {
     color: white !important;
 }
@@ -23,10 +25,10 @@ nav, #navbar, .navbar {
 }
 
 .admin-card {
-    background-color: #1a1c20 !important; 
+    background-color: #1a1c20 !important;
     border-radius: 12px;
     padding: 30px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     color: white;
     margin-top: 20px;
     margin-bottom: 30px;
@@ -38,7 +40,7 @@ nav, #navbar, .navbar {
     font-weight: 700;
     margin-bottom: 25px;
     color: #fff;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 15px;
     text-align: left;
 }
@@ -100,13 +102,13 @@ nav, #navbar, .navbar {
 
 .admin-table {
     width: 100%;
-    border-collapse: separate; 
+    border-collapse: separate;
     border-spacing: 0 10px;
     margin-top: 10px;
 }
 
 .admin-table th {
-    color: #6c757d; 
+    color: #6c757d;
     font-size: 0.75rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -123,7 +125,7 @@ nav, #navbar, .navbar {
 
 .admin-table tbody tr:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .admin-table td {
@@ -138,6 +140,7 @@ nav, #navbar, .navbar {
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
 }
+
 .admin-table td:last-child {
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
@@ -202,4 +205,12 @@ nav, #navbar, .navbar {
 .btn-add-hero:hover {
     background-color: #26af74;
     transform: translateY(-1px);
+}
+
+.plan-selector {
+    border: 1px solid transparent;
+}
+
+.plan-selector.active {
+    border-color: #2ecc71;
 }
