@@ -2,221 +2,196 @@
 {% load static %}
 
 {% block content %}
-<style>
-    /* تنسيقات خاصة بصفحة الداشبورد لضمان عدم اللخبطة */
-    .dashboard-wrapper {
-        background-color: #0f1113; /* لون الخلفية الخاص بك */
-        min-height: 100vh;
-        padding: 40px 20px;
-        color: #ffffff;
-    }
 
-    .rassid-card {
-        background: #1a1d21; /* لون الكروت في نظامك */
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 24px;
-    }
+<div class="dashboard-container">
 
-    /* صف الإحصائيات الأربعة */
-    .metrics-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-
-    .metric-item {
-        border-left: 4px solid #22d3ee; /* اللون التركوازي */
-        padding-left: 15px;
-    }
-
-    .metric-label {
-        color: #94a3b8;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-    }
-
-    .metric-value {
-        font-size: 1.8rem;
-        font-weight: 700;
-        display: block;
-    }
-
-    /* صف الرسوم البيانية الثلاثة */
-    .charts-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-
-    @media (max-width: 768px) {
-        .charts-container { grid-template-columns: 1fr; }
-    }
-
-    .chart-box {
-        background: #24272c;
-        height: 180px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #555;
-        border: 1px dashed rgba(255,255,255,0.1);
-    }
-
-    /* تنسيق الجدول الاحترافي */
-    .rassid-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .rassid-table th {
-        text-align: left;
-        color: #94a3b8;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        padding: 15px;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .rassid-table td {
-        padding: 15px;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-        font-size: 0.9rem;
-    }
-
-    /* زر الإضافة الأخضر الخاص بك */
-    .btn-add-rassid {
-        background: linear-gradient(90deg, #10b981, #22d3ee);
-        color: #000 !important;
-        font-weight: 700;
-        text-decoration: none;
-        padding: 8px 20px;
-        border-radius: 5px;
-        font-size: 0.85rem;
-    }
-
-    .sub-info-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-    }
-
-    .sub-box {
-        background: #24272c;
-        padding: 15px;
-        border-radius: 6px;
-    }
-</style>
-
-<div class="dashboard-wrapper">
-    <div class="container">
-        
-        <div class="d-flex justify-content-between align-items-center mb-5">
-            <h3 class="fw-bold">Airport Dashboard</h3>
-            <a href="/logout/" class="text-danger text-decoration-none small">Logout</a>
+    <!-- HEADER -->
+    <!-- KPIs -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-title">Flights Today</div>
+            <div class="stat-value">{{ today_flights|default:"0" }}</div>
         </div>
-
-        <div class="metrics-container">
-            <div class="rassid-card metric-item">
-                <span class="metric-label">Flights Today</span>
-                <span class="metric-value">{{ today_flights|default:"0" }}</span>
-            </div>
-            <div class="rassid-card metric-item">
-                <span class="metric-label">Employees</span>
-                <span class="metric-value">{{ employees.count|default:"0" }}</span>
-            </div>
-            <div class="rassid-card metric-item" style="border-left-color: #10b981;">
-                <span class="metric-label">Success Rate</span>
-                <span class="metric-value" style="color: #10b981;">98%</span>
-            </div>
-            <div class="rassid-card metric-item" style="border-left-color: #f87171;">
-                <span class="metric-label">Alerts</span>
-                <span class="metric-value" style="color: #f87171;">12</span>
-            </div>
+        <div class="stat-card">
+            <div class="stat-title">Employees Count</div>
+            <div class="stat-value">{{ employees.count|default:"0" }}</div>
         </div>
-
-        <p class="text-muted mb-3">Operational Reports</p>
-        <div class="charts-container">
-            <div class="chart-box">Monthly Traffic</div>
-            <div class="chart-box">Staff Efficiency</div>
-            <div class="chart-box">Notification Log</div>
+        <div class="stat-card">
+            <div class="stat-title">Notification Success</div>
+            <div class="stat-value" style="color:#2ecc71;">98%</div>
         </div>
-
-        <div class="rassid-card">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="m-0">Employees Management</h5>
-                <a href="{% url 'airport_admin_add_employee' %}" class="btn-add-rassid">Add Employee</a>
-            </div>
-            <div class="table-responsive">
-                <table class="rassid-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for employee in employees %}
-                        <tr>
-                            <td class="fw-bold">{{ employee.first_name }} {{ employee.last_name }}</td>
-                            <td class="text-muted">{{ employee.email }}</td>
-                            <td>{{ employee.role }}</td>
-                            <td>
-                                <a href="{% url 'airport_admin_edit_employee' employee.id %}" class="text-info text-decoration-none">Edit</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="stat-card">
+            <div class="stat-title">Failed Notifications</div>
+            <div class="stat-value" style="color:#e74c3c;">12</div>
         </div>
-
-        <div class="row">
-            <div class="col-md-7">
-                <div class="rassid-card">
-                    <h5 class="mb-4">Tickets Inbox</h5>
-                    <table class="rassid-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Subject</th>
-                                <th>Priority</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>#T001</td>
-                                <td>Gate 4 System Offline</td>
-                                <td class="text-danger">High</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-md-5">
-                <div class="rassid-card">
-                    <h5 class="mb-4">Subscription</h5>
-                    <div class="sub-info-grid mb-4">
-                        <div class="sub-box">
-                            <small class="text-muted d-block">Plan</small>
-                            <span class="fw-bold">Premium</span>
-                        </div>
-                        <div class="sub-box">
-                            <small class="text-muted d-block">Expiry</small>
-                            <span class="fw-bold">2025-01-15</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline-info btn-sm w-100">Renew Plan</button>
-                </div>
-            </div>
-        </div>
-
     </div>
+
+    <!-- REPORTS -->
+    <div class="reports-grid">
+        <div class="chart-placeholder">Chart Placeholder 1</div>
+        <div class="chart-placeholder">Chart Placeholder 2</div>
+        <div class="chart-placeholder">Chart Placeholder 3</div>
+    </div>
+
+    <!-- EMPLOYEES MANAGEMENT -->
+    <div class="glass-card">
+        <div class="card-header">
+            <h3>Employees Management</h3>
+            <a href="{% url 'airport_admin_add_employee' %}" class="btn-action">
+                Add Employee
+            </a>
+        </div>
+
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees|slice:":5" %}
+                <tr>
+                    <td>{{ employee.first_name|default:employee.email }}</td>
+                    <td>{{ employee.email }}</td>
+                    <td>{{ employee.role|default:"User" }}</td>
+                    <td>
+                        {% if employee.is_active %}
+                            Active
+                        {% else %}
+                            Inactive
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{% url 'airport_admin_edit_employee' employee.id %}" class="btn-action">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">
+                        No employees found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TICKETS INBOX -->
+    <div class="glass-card">
+        <div class="card-header">
+            <h3>Tickets Inbox</h3>
+        </div>
+
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in recent_tickets|slice:":5" %}
+                <tr>
+                    <td>#{{ ticket.id }}</td>
+                    <td>{{ ticket.title|truncatechars:45 }}</td>
+                    <td>{{ ticket.category|default:"General" }}</td>
+                    <td>{{ ticket.priority }}</td>
+                    <td>{{ ticket.status }}</td>
+                    <td class="text-end">
+                        <button class="btn-action">Accept</button>
+                        <button class="btn-action">Reject</button>
+                        <a href="{% url 'airport_ticket_detail' ticket.id %}" class="btn-action">
+                            View
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">
+                        No tickets found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- SUBSCRIPTION -->
+    <div class="glass-card">
+        <div class="card-header">
+            <h3>Subscription</h3>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-title">Plan</div>
+                <div class="stat-value">Premium</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Expiry</div>
+                <div class="stat-value">{{ subscription_expiry|default:"2025-01-15" }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Max Employees</div>
+                <div class="stat-value">{{ max_employees|default:"20" }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Used Employees</div>
+                <div class="stat-value">{{ employees.count }}</div>
+            </div>
+        </div>
+
+        <button class="btn-action mt-3">Renew Subscription</button>
+    </div>
+
+    <!-- PAYMENT HISTORY -->
+    <div class="glass-card mb-5">
+        <div class="card-header">
+            <h3>Payment History</h3>
+        </div>
+
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Plan</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2024-11-15</td>
+                    <td>$299</td>
+                    <td>Premium</td>
+                    <td>Paid</td>
+                </tr>
+                <tr>
+                    <td>2024-10-15</td>
+                    <td>$299</td>
+                    <td>Premium</td>
+                    <td>Paid</td>
+                </tr>
+                <tr>
+                    <td>2024-09-15</td>
+                    <td>$299</td>
+                    <td>Premium</td>
+                    <td>Paid</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>
+
 {% endblock %}
