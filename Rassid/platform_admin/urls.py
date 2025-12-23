@@ -11,6 +11,7 @@ urlpatterns = [
     path("airports/", views.airports, name="platform_admin_airports"),
     path("airports/<int:id>/", views.airport_details, name="admin_airport_details"),
     path("airports/<int:id>/renew/", views.renew_subscription, name="renew_subscription"),
+    path("airports/<int:id>/modify-plan/", views.modify_subscription_plan, name="modify_subscription_plan"),
     path("airports/<int:id>/toggle-status/", views.toggle_subscription_status, name="toggle_subscription_status"),
     path('users/<int:user_id>/reset-password/', views.admin_reset_password, name='admin_reset_password'),
     path('users/<int:user_id>/toggle-access/', views.admin_toggle_user_access, name='admin_toggle_user_access'),

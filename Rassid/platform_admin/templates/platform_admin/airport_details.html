@@ -62,9 +62,9 @@
                 Renew Subscription
             </a>
 
-            <button class="btn-action warning" onclick="alert('Plan modification feature coming soon!')">
+            <a href="{% url 'modify_subscription_plan' airport.id %}" class="btn-action warning">
                 Modify Plan
-            </button>
+            </a>
 
             <a href="{% url 'toggle_subscription_status' airport.id %}"
                 onclick="return confirm('Are you sure you want to change the status?');"
@@ -91,34 +91,34 @@
                 </tr>
             </thead>
             <tbody>
-                {% if admin_user %}
+                {% for admin in admin_users %}
                 <tr>
                     <td style="color: white;">Airport Admin</td>
-                    <td>{{ admin_user.email }}</td>
+                    <td>{{ admin.email }}</td>
                     <td style="text-align: right;">
                         <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                            <a href="{% url 'admin_reset_password' admin_user.id %}"
-                                onclick="return confirm('Reset password for {{ admin_user.email }}?');"
-                                class="btn-action warning small">
-                                Reset Password
+                            <a href="{% url 'admin_reset_password' admin.id %}"
+                                onclick="return confirm('Reset password for {{ admin.email }}? New password will be shown on screen.');"
+                                class="btn-action warning">Reset Pass</a>
+
+                            <a href="{% url 'admin_toggle_user_access' admin.id %}"
+                                class="btn-action {% if admin.is_active %}danger{% else %}success{% endif %}">
+                                {% if admin.is_active %}Disable{% else %}Enable{% endif %}
                             </a>
 
-                            <a href="{% url 'admin_toggle_user_access' admin_user.id %}"
-                                class="btn-action {% if admin_user.is_active %}danger{% else %}success{% endif %} small">
-                                {% if admin_user.is_active %}
-                                Disable Account
-                                {% else %}
-                                Enable Account
-                                {% endif %}
+                            <a href="{% url 'admin_delete_user' admin.id %}" class="btn-action danger"
+                                onclick="return confirm('Are you sure you want to delete this admin user? This action cannot be undone.');"
+                                style="background: rgba(231, 76, 60, 0.4); border-color: #c0392b;">
+                                Delete
                             </a>
                         </div>
                     </td>
                 </tr>
-                {% else %}
+                {% empty %}
                 <tr>
-                    <td colspan="3" style="text-align: center; color: #666;">No admin assigned</td>
+                    <td colspan="3" style="text-align: center; color: #666;">No admins assigned</td>
                 </tr>
-                {% endif %}
+                {% endfor %}
             </tbody>
         </table>
     </div>

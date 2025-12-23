@@ -13,6 +13,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.urls import reverse
 
+from django.db.models import Count, Q
 from airports.models import Airport, AirportSubscription, SubscriptionRequest
 from flights.models import Flight
 from tickets.models import Ticket
@@ -37,8 +38,9 @@ def admin_dashboard(request):
     if not is_super_admin(request.user):
         return redirect('public_home')
 
-    emails_sent_count = EmailLog.objects.filter(status='Sent').count()
-    emails_failed_count = EmailLog.objects.filter(status='Failed').count()
+    last_24h = timezone.now() - timedelta(hours=24)
+    emails_sent_count = EmailLog.objects.filter(status='Sent', sent_at__gte=last_24h).count()
+    emails_failed_count = EmailLog.objects.filter(status='Failed', sent_at__gte=last_24h).count()
 
     today = timezone.now().date()
     passengers_today = PassengerFlight.objects.filter(
@@ -54,32 +56,50 @@ def admin_dashboard(request):
 
     stats = {
         "airports_count": Airport.objects.count(),
-        "active_subscriptions": AirportSubscription.objects.filter(status='active').count(),
-        "employees_count": User.objects.filter(role='airport_staff').count(),
+        "active_subscriptions": AirportSubscription.objects.filter(status='active').values('airport').distinct().count(),
+        "employees_count": User.objects.filter(role__in=['airport_admin', 'airport_staff']).count(),
         "passengers_today": passengers_today,
         "emails_delivered": emails_sent_count,
-        "api_errors": emails_failed_count,
-        "system_uptime": system_uptime
+        "api_errors": emails_failed_count, 
+        "system_uptime": system_uptime,
     }
 
-    latest_airports_qs = Airport.objects.all().order_by('-id')[:5]
-    latest_airports = []
-    for airport in latest_airports_qs:
-        sub = AirportSubscription.objects.filter(airport=airport).first()
-        airport.status = sub.status if sub else 'Inactive'
-        latest_airports.append(airport)
-    
-    admins = User.objects.filter(role='airport_admin')[:5]
-    
+    latest_airports = list(Airport.objects.all().order_by('-created_at')[:5])
+    for airport in latest_airports:
+        airport.admins_count = User.objects.filter(airport_id=airport.id, role='airport_admin').count()
+        sub = AirportSubscription.objects.filter(airport_id=airport.id).order_by('-expire_at').first()
+        airport.status = sub.status if sub else 'inactive'
+        
+        airport.remaining_time_str = "-"
+        if sub and sub.expire_at:
+            if timezone.is_aware(sub.expire_at):
+                now = timezone.now()
+            else:
+                now = datetime.now()
+            
+            delta = sub.expire_at - now
+            total_days = delta.days
 
-    recent_tickets = Ticket.objects.select_related('airport').all().order_by('-createdAt')[:5]
- 
+            if total_days > 0:
+                years = total_days // 365
+                days = total_days % 365
+                
+                parts = []
+                if years > 0:
+                    parts.append(f"{years} {'Year' if years == 1 else 'Years'}")
+                if days > 0:
+                    parts.append(f"{days} {'Day' if days == 1 else 'Days'}")
+                
+                airport.remaining_time_str = ", ".join(parts) if parts else "Expires Today"
+            else:
+                airport.remaining_time_str = "Expired"
+
+    tickets = Ticket.objects.filter(status__in=['open', 'in_progress']).order_by('-createdAt')[:5]
 
     context = {
         "stats": stats,
         "latest_airports": latest_airports,
-        "admins": admins,
-        "tickets": recent_tickets
+        "tickets": tickets
     }
     return render(request, "platform_admin/dashboard.html", context)
 
@@ -107,27 +127,21 @@ def approve_request(request, request_id):
         
     sub_req = get_object_or_404(SubscriptionRequest, id=request_id)
     
-    # Allow approval if pending OR if already in payment pending (e.g. resending email)
     if sub_req.status not in ['pending', 'approved_pending_payment']:
         messages.warning(request, "This request has already been processed or is fully active.")
         return redirect('admin_requests_list')
 
     try:
-        # Check email availability early
         if User.objects.filter(email=sub_req.admin_email).exists():
             messages.error(request, f"Review Failed: A user with email {sub_req.admin_email} already exists.")
             return redirect('admin_requests_list')
 
-        # Update status to waiting for payment
         sub_req.status = 'approved_pending_payment'
         sub_req.reviewed_by = request.user
         sub_req.save()
 
-        # Build Checkout URL (Public URL)
-        # Assuming we add this URL path to airports/urls.py
         checkout_url = request.build_absolute_uri(reverse('airport_payment_checkout', args=[sub_req.id]))
 
-        # Send Payment Request Email
         subject = "Application Approved - Activation Payment Required"
         context = {
             'airport_name': sub_req.airport_name,
@@ -214,7 +228,6 @@ def reject_request(request, request_id):
 
         return redirect('admin_requests_list')
 
-    # If not POST, redirect back to details page
     return redirect('admin_request_details', request_id)
 
 @login_required
@@ -250,12 +263,12 @@ def airport_details(request, id):
         return redirect('public_home')
     airport = get_object_or_404(Airport, id=id)
     subscription = AirportSubscription.objects.filter(airport=airport).first()
-    admin_user = User.objects.filter(airport_id=airport.id, role='airport_admin').first()
+    admin_users = User.objects.filter(airport_id=airport.id, role='airport_admin')
     
     context = {
         'airport': airport,
         'subscription': subscription,
-        'admin_user': admin_user,
+        'admin_users': admin_users,
     }
     return render(request, 'platform_admin/airport_details.html', context)
 
@@ -264,7 +277,10 @@ def renew_subscription(request, id):
     if not is_super_admin(request.user):
         return redirect('public_home')
         
-    subscription = get_object_or_404(AirportSubscription, airport_id=id)
+    subscription = AirportSubscription.objects.filter(airport_id=id).order_by('-expire_at').first()
+    if not subscription:
+        messages.error(request, "No subscription found for this airport.")
+        return redirect('admin_airport_details', id=id)
     
     if subscription.expire_at:
         subscription.expire_at = subscription.expire_at + timedelta(days=365)
@@ -278,12 +294,53 @@ def renew_subscription(request, id):
     return redirect_back(request, anchor='subscription-section')
 
 @login_required
+def modify_subscription_plan(request, id):
+    if not is_super_admin(request.user):
+        return redirect('public_home')
+        
+    airport = get_object_or_404(Airport, id=id)
+    subscription = AirportSubscription.objects.filter(airport_id=id).order_by('-expire_at').first()
+    
+    if not subscription:
+         messages.error(request, "No active subscription found to modify.")
+         return redirect('admin_airport_details', id=id)
+
+    if request.method == 'POST':
+        new_plan = request.POST.get('plan_type')
+        if new_plan in ['1_year', '3_years', '5_years']:
+            subscription.plan_type = new_plan
+            
+            duration_days = 365
+            if new_plan == '3_years':
+                duration_days = 365 * 3
+            elif new_plan == '5_years':
+                duration_days = 365 * 5
+                
+            subscription.expire_at = datetime.now() + timedelta(days=duration_days)
+            subscription.status = 'active'
+            subscription.save()
+            
+            messages.success(request, f"Plan modified to {new_plan.replace('_', ' ').title()} successfully.")
+            return redirect('admin_airport_details', id=id)
+
+    context = {
+        'airport': airport,
+        'subscription': subscription,
+        'plans': SubscriptionRequest.PLAN_CHOICES
+    }
+    return render(request, 'platform_admin/modify_plan.html', context)
+
+@login_required
 def toggle_subscription_status(request, id):
     if not is_super_admin(request.user):
         return redirect('public_home')
     
     airport = get_object_or_404(Airport, id=id)
-    subscription = AirportSubscription.objects.filter(airport=airport).first()
+    subscription = AirportSubscription.objects.filter(airport_id=id).order_by('-expire_at').first()
+    
+    if not subscription:
+        messages.error(request, "No subscription found for this airport.")
+        return redirect('admin_airport_details', id=id)
     
     if subscription:
         if subscription.status == 'active':
