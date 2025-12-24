@@ -18,7 +18,8 @@
     <div class="airports-grid">
         {% for airport in airports %}
         <div class="airport-card">
-            <div class="ac-image" style="background-image: url('https://images.unsplash.com/photo-1530521954074-e64f6810b32d?q=80&w=1000&auto=format&fit=crop');">
+            <div class="ac-image"
+                style="background-image: url('https://images.unsplash.com/photo-1530521954074-e64f6810b32d?q=80&w=1000&auto=format&fit=crop');">
                 <div class="ac-badge status-active">Active Partner</div>
             </div>
             <div class="ac-content">
@@ -28,7 +29,8 @@
                 </div>
                 <p class="ac-name">{{ airport.name }}</p>
                 <div class="ac-meta simple-meta">
-                    <span><span class="material-symbols-outlined">flight_takeoff</span> Country: {{ airport.country }}</span>
+                    <span><span class="material-symbols-outlined">flight_takeoff</span> Country: {{ airport.country
+                        }}</span>
                 </div>
             </div>
         </div>
