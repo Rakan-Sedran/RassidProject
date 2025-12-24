@@ -437,3 +437,247 @@ nav,
     max-width: 600px;
     margin: 0 auto;
 }
+
+/* =========================================
+   CONSOLIDATED STYLES (From Templates)
+   ========================================= */
+
+/* --- Employee & List Styles --- */
+
+/* Avatar Circle */
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #2dce89 0%, #2dcecc 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+/* Mini Stats Cards (Employees Page) */
+.stat-card-mini {
+    background: #1e2124;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: transform 0.2s;
+}
+
+.stat-card-mini:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+/* Icon Action Buttons */
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+    text-decoration: none;
+}
+
+.btn-icon-edit {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-icon-edit:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-icon-delete {
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+}
+
+.btn-icon-delete:hover {
+    background: #ff6b6b;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+/* Employee Info & Text */
+.emp-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.emp-name {
+    font-size: 0.95rem;
+    line-height: 1.2;
+    color: #ffffff;
+}
+
+.emp-email {
+    font-size: 0.8rem;
+    color: #8fa0b0;
+    margin-top: 2px;
+}
+
+/* --- Settings & Universal Components --- */
+
+/* Premium Hover Effects for Glass Cards */
+.glass-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Hero Banner Style */
+.hero-banner {
+    background: linear-gradient(135deg, #1e2124 0%, #16191d 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top right, rgba(45, 206, 137, 0.1) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.airport-watermark {
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-10deg);
+    font-size: 8rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.03);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Checkbox/Input Wrapper */
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper .material-symbols-outlined {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    z-index: 5;
+}
+
+/* Modern Input Fields */
+.modern-input {
+    background-color: #23262b !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    padding: 12px 15px 12px 45px !important;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.modern-input:focus {
+    border-color: #2dce89 !important;
+    box-shadow: 0 0 0 4px rgba(45, 206, 137, 0.1);
+    background-color: #2a2e33 !important;
+}
+
+/* Subscription Progress Bar */
+.sub-progress {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.sub-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #2dce89, #2dcecc);
+    transition: width 1.5s ease;
+}
+
+/* Dark Mode Text Overrides */
+.text-muted {
+    color: #8fa0b0 !important;
+}
+
+
+/* --- Dashboard Tabs Style --- */
+.nav-tabs-custom {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 20px;
+    gap: 20px;
+    display: flex;
+}
+
+.nav-tabs-custom .nav-link {
+    color: #888 !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid transparent !important;
+    padding: 15px 20px !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    transition: all 0.2s ease !important;
+    margin-bottom: -2px !important;
+    cursor: pointer;
+}
+
+.nav-tabs-custom .nav-link:hover {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.nav-tabs-custom .nav-link.active {
+    color: #2dce89 !important;
+    background: transparent !important;
+    border-bottom-color: #2dce89 !important;
+}
+
+/* Tab Content Animation */
+.tab-content>.tab-pane {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.tab-content>.active {
+    display: block;
+    opacity: 1;
+}

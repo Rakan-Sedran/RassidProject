@@ -2,119 +2,7 @@
 {% load static %}
 
 {% block content %}
-<style>
-    /* Premium Hover Effects */
-    .glass-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
 
-    .glass-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Hero Banner Style */
-    .hero-banner {
-        background: linear-gradient(135deg, #1e2124 0%, #16191d 100%);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        position: relative;
-        overflow: hidden;
-        border-radius: 16px;
-    }
-
-    .hero-banner::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at top right, rgba(45, 206, 137, 0.1) 0%, transparent 60%);
-        pointer-events: none;
-    }
-
-    .airport-watermark {
-        position: absolute;
-        right: -20px;
-        top: 50%;
-        transform: translateY(-50%) rotate(-10deg);
-        font-size: 8rem;
-        font-weight: 900;
-        color: rgba(255, 255, 255, 0.03);
-        pointer-events: none;
-        user-select: none;
-    }
-
-    /* Input Styling */
-    .input-wrapper {
-        position: relative;
-    }
-
-    .input-wrapper .material-symbols-outlined {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #6c757d;
-        z-index: 5;
-    }
-
-    .modern-input {
-        background-color: #23262b !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: white !important;
-        padding: 12px 15px 12px 45px !important;
-        /* pad left for icon */
-        border-radius: 10px;
-        transition: 0.3s;
-    }
-
-    .modern-input:focus {
-        border-color: #2dce89 !important;
-        box-shadow: 0 0 0 4px rgba(45, 206, 137, 0.1);
-        background-color: #2a2e33 !important;
-    }
-
-    /* Progress Bar */
-    .sub-progress {
-        height: 6px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        overflow: hidden;
-        margin-top: 8px;
-    }
-
-    .sub-progress-bar {
-        height: 100%;
-        background: linear-gradient(90deg, #2dce89, #2dcecc);
-        transition: width 1.5s ease;
-    }
-
-    /* THEME OVERRIDES FOR PREMIUM DARK MODE */
-    body {
-        background-color: #121417 !important;
-        /* Force Dark Background */
-        color: #e0e0e0;
-    }
-
-    .page-subtitle {
-        color: #a0a0a0 !important;
-    }
-
-    .text-muted {
-        color: #8fa0b0 !important;
-        /* Lighter grey for better visibility on dark */
-    }
-
-    .admin-form-label {
-        color: #d0d0d0 !important;
-    }
-
-    /* Fix Input Icons Color */
-    .input-wrapper .material-symbols-outlined {
-        color: #a0a0a0;
-    }
-</style>
 
 
 <div class="page-header">
@@ -187,8 +75,7 @@
                         class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-light border-opacity-10">
                         <div>
                             <span class="d-block text-secondary x-small fw-bold text-uppercase mb-1">Current Plan</span>
-                            <h3 class="text-white fw-bold mb-0 text-nowrap">{{ subscription.plan_type|default:"Free
-                                Tier" }}</h3>
+                            <h3 class="text-white fw-bold mb-0 text-nowrap">{{subscription.plan_type|default:"FreeTier" }}</h3>
                         </div>
                         {% if subscription.status == 'active' %}
                         <div class="text-end">
@@ -222,8 +109,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center gap-2 text-muted small">
                             <span class="material-symbols-outlined fs-6">event_available</span>
-                            <span>Expires: <span class="text-white fw-medium">{{ subscription.expire_at|date:"M d, Y"
-                                    }}</span></span>
+                            <span>Expires: <span class="text-white fw-medium">{{subscription.expire_at|date:"M d, Y"}}</span></span>
                         </div>
                         <a href="{% url 'airport_renew_subscription' %}"
                             class="btn btn-sm btn-outline-light rounded-pill px-4"

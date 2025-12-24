@@ -1,4 +1,7 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
 <div class="page-header">
     <div class="container">
         <h1>Ticket Management</h1>
@@ -6,56 +9,92 @@
     </div>
 </div>
 
-<div class="container" style="margin-top: 30px;">
-    {% if tickets %}
+<div class="dashboard-container">
+
+    <!-- TICKET TABLE -->
     <div class="glass-card">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Created By</th>
-                    <th>Date</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ticket in tickets %}
-                <tr>
-                    <td>#{{ ticket.id }}</td>
-                    <td style="font-weight: 500;">{{ ticket.title }}</td>
-                    <td>{{ ticket.category }}</td>
-                    <td>
-                        {% if ticket.priority == 'High' %}
-                        <span class="badge" style="background: #fee2e2; color: #ef4444;">High</span>
-                        {% elif ticket.priority == 'Medium' %}
-                        <span class="badge" style="background: #ffedd5; color: #f97316;">Medium</span>
-                        {% else %}
-                        <span class="badge" style="background: #ecfccb; color: #65a30d;">Low</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <span class="badge status-{{ ticket.status|lower }}">{{ ticket.status }}</span>
-                    </td>
-                    <td>{{ ticket.createdBy.username }}</td>
-                    <td>{{ ticket.createdAt|date:"M d" }}</td>
-                    <td>
-                        <a href="{% url 'admin_ticket_detail' ticket.id %}" class="btn-outline btn-sm">View</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="card-header border-bottom border-light border-opacity-10 py-3 px-4">
+            <div class="d-flex align-items-center gap-2">
+                <span class="material-symbols-outlined text-muted">confirmation_number</span>
+                <h5 class="mb-0 fw-bold text-white text-uppercase" style="letter-spacing: 1px; font-size: 0.9rem;">
+                    Tickets Inbox</h5>
+            </div>
+            <a href="{% url 'create_ticket' %}"
+                class="btn btn-primary rounded-pill px-4 py-2 fw-bold d-flex align-items-center gap-2">
+                <span class="material-symbols-outlined">add</span>
+                New Ticket
+            </a>
+        </div>
+
+        {% if tickets %}
+        <div class="table-responsive">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th class="ps-4">ID</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Created By</th>
+                        <th>Date</th>
+                        <th class="text-end pe-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td class="ps-4 text-muted font-monospace">#{{ ticket.id }}</td>
+                        <td>
+                            <div class="fw-bold text-white">{{ ticket.title|truncatechars:30 }}</div>
+                        </td>
+                        <td>
+                            <span
+                                class="badge bg-light text-dark bg-opacity-10 border border-secondary border-opacity-25 fw-normal rounded-pill px-2">
+                                {{ ticket.category }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if ticket.priority == 'High' %}
+                            <span class="status-badge danger">High</span>
+                            {% elif ticket.priority == 'Medium' %}
+                            <span class="status-badge warning">Medium</span>
+                            {% else %}
+                            <span class="status-badge success">Low</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="status-badge status-{{ ticket.status|lower }}">{{ ticket.status }}</span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="avatar-circle" style="width: 24px; height: 24px; font-size: 0.7rem;">
+                                    {{ ticket.createdBy.username|slice:":1"|upper }}
+                                </div>
+                                <span class="small text-muted">{{ ticket.createdBy.username }}</span>
+                            </div>
+                        </td>
+                        <td class="text-muted small">{{ ticket.createdAt|date:"M d" }}</td>
+                        <td class="text-end pe-4">
+                            <a href="{% url 'admin_ticket_detail' ticket.id %}" class="btn-icon btn-icon-edit"
+                                title="View Details">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-5 text-center">
+            <div class="d-flex flex-column align-items-center justify-content-center text-muted opacity-50">
+                <span class="material-symbols-outlined fs-1 mb-2">inbox</span>
+                <span>Inbox Empty. No tickets to review.</span>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="empty-state">
-        <span class="material-symbols-outlined">inbox</span>
-        <h3>Inbox Empty</h3>
-        <p>No tickets to review.</p>
-    </div>
-    {% endif %}
+
 </div>
 {% endblock %}

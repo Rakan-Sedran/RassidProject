@@ -128,136 +128,163 @@
         </table>
     </div>
 
-    <!-- 1. Incoming Tickets (From Operators) -->
+    <!-- UNIFIED TICKET TABS -->
     <div class="glass-card mb-4">
-        <div class="card-header">
-            <div class="d-flex align-items-center gap-2">
-                <span class="material-symbols-outlined text-warning">inbox</span>
-                <h3>Incoming Tickets (From Staff)</h3>
+        <div class="card-header border-bottom-0 pb-0">
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <ul class="nav nav-tabs-custom" id="ticketTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="incoming-tab" data-bs-toggle="tab"
+                            data-bs-target="#incoming" type="button" role="tab" aria-controls="incoming"
+                            aria-selected="true">
+                            Incoming Tickets <span class="badge bg-warning text-dark ms-2">{{ incoming_tickets.count}}</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="my-requests-tab" data-bs-toggle="tab" data-bs-target="#my-requests"
+                            type="button" role="tab" aria-controls="my-requests" aria-selected="false">
+                            My Support Requests
+                        </button>
+                    </li>
+                </ul>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'admin_tickets_list' %}" class="btn-action"
+                        style="background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2);">
+                        <span class="material-symbols-outlined fs-6">list</span>
+                        All Tickets
+                    </a>
+                    <a href="{% url 'create_ticket' %}" class="btn-action">
+                        <span class="material-symbols-outlined fs-6">add</span>
+                        New Request
+                    </a>
+                </div>
             </div>
         </div>
 
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Submited By</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ticket in incoming_tickets %}
-                <tr>
-                    <td>#{{ ticket.id }}</td>
-                    <td>{{ ticket.title|truncatechars:30 }}</td>
-                    <td>
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="avatar-circle" style="width: 24px; height: 24px; font-size: 0.7rem;">
-                                {{ ticket.createdBy.first_name|default:ticket.createdBy.email|first|upper }}
-                            </div>
-                            <span class="small">{{ ticket.createdBy.first_name }} {{ ticket.createdBy.last_name
-                                }}</span>
-                        </div>
-                    </td>
-                    <td>
-                        {% if ticket.priority == 'High' %}
-                        <span class="status-badge danger">High</span>
-                        {% else %}
-                        {{ ticket.priority }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        <span class="status-badge warning">{{ ticket.status }}</span>
-                    </td>
-                    <td class="text-end">
-                        {% if ticket.status == 'Open' %}
-                        <a href="{% url 'admin_ticket_escalate' ticket.id %}" class="btn-action"
-                            onclick="return confirm('Escalate this ticket to Platform Admin?');"
-                            style="background: rgba(241, 196, 15, 0.1); color: #f1c40f; border-color: rgba(241, 196, 15, 0.2);">
-                            Escalate
-                        </a>
-                        {% endif %}
-                        <a href="{% url 'admin_ticket_detail' ticket.id %}" class="btn-action">
-                            View
-                        </a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="text-center text-muted py-4">
-                        No new tickets from staff.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <!-- 2. My Support Requests (To Platform Admin) -->
-    <div class="glass-card">
-        <div class="card-header">
-            <div class="d-flex align-items-center gap-2">
-                <span class="material-symbols-outlined text-primary">support_agent</span>
-                <h3>My Support Requests</h3>
+        <div class="tab-content" id="ticketTabsContent">
+            <!-- TAB 1: Incoming Tickets -->
+            <div class="tab-pane fade show active" id="incoming" role="tabpanel" aria-labelledby="incoming-tab">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Submited By</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in incoming_tickets %}
+                        <tr>
+                            <td>#{{ ticket.id }}</td>
+                            <td>{{ ticket.title|truncatechars:30 }}</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar-circle" style="width: 24px; height: 24px; font-size: 0.7rem;">
+                                        {{ ticket.createdBy.first_name|default:ticket.createdBy.email|first|upper }}
+                                    </div>
+                                    <span class="small">{{ ticket.createdBy.first_name }} {{ ticket.createdBy.last_name
+                                        }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                {% if ticket.priority == 'High' %}
+                                <span class="status-badge danger">High</span>
+                                {% else %}
+                                {{ ticket.priority }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="status-badge warning">{{ ticket.status }}</span>
+                            </td>
+                            <td class="text-end">
+                                {% if ticket.status == 'Open' %}
+                                <a href="{% url 'admin_ticket_escalate' ticket.id %}" class="btn-action"
+                                    onclick="return confirm('Escalate this ticket to Platform Admin?');"
+                                    style="background: rgba(241, 196, 15, 0.1); color: #f1c40f; border-color: rgba(241, 196, 15, 0.2);">
+                                    Escalate
+                                </a>
+                                {% endif %}
+                                <a href="{% url 'admin_ticket_detail' ticket.id %}" class="btn-icon btn-icon-edit"
+                                    title="View">
+                                    <span class="material-symbols-outlined" style="font-size: 1.1rem;">visibility</span>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-5">
+                                <div class="d-flex flex-column align-items-center opacity-50">
+                                    <span class="material-symbols-outlined fs-2 mb-2">inbox</span>
+                                    <span>No new tickets from staff.</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <a href="{% url 'create_ticket' %}" class="btn-action">
-                + New Request
-            </a>
-        </div>
 
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Date</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ticket in my_tickets %}
-                <tr>
-                    <td>#{{ ticket.id }}</td>
-                    <td>{{ ticket.title|truncatechars:45 }}</td>
-                    <td>{{ ticket.createdAt|date:"M d" }}</td>
-                    <td>{{ ticket.priority }}</td>
-                    <td>
-                        {% if ticket.status == 'Open' %}
-                        <span class="status-badge success"
-                            style="background: rgba(46, 204, 113, 0.15); color: #2ecc71;">Open</span>
-                        {% elif ticket.status == 'Closed' %}
-                        <span class="status-badge"
-                            style="background: rgba(149, 165, 166, 0.15); color: #95a5a6;">Closed</span>
-                        {% elif ticket.status == 'Escalated' %}
-                        <span class="status-badge warning"
-                            style="background: rgba(241, 196, 15, 0.15); color: #f1c40f;">Escalated</span>
-                        {% elif ticket.status == 'Rejected' %}
-                        <span class="status-badge danger"
-                            style="background: rgba(231, 76, 60, 0.15); color: #e74c3c;">Rejected</span>
-                        {% else %}
-                        {{ ticket.status }}
-                        {% endif %}
-                    </td>
-                    <td class="text-end">
-                        <a href="{% url 'admin_ticket_detail' ticket.id %}" class="btn-action">
-                            View details
-                        </a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="text-center text-muted py-4">
-                        You haven't raised any support requests.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            <!-- TAB 2: My Support Requests -->
+            <div class="tab-pane fade" id="my-requests" role="tabpanel" aria-labelledby="my-requests-tab">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in my_tickets %}
+                        <tr>
+                            <td>#{{ ticket.id }}</td>
+                            <td>{{ ticket.title|truncatechars:45 }}</td>
+                            <td>{{ ticket.createdAt|date:"M d" }}</td>
+                            <td>{{ ticket.priority }}</td>
+                            <td>
+                                {% if ticket.status == 'Open' %}
+                                <span class="status-badge success"
+                                    style="background: rgba(46, 204, 113, 0.15); color: #2ecc71;">Open</span>
+                                {% elif ticket.status == 'Closed' %}
+                                <span class="status-badge"
+                                    style="background: rgba(149, 165, 166, 0.15); color: #95a5a6;">Closed</span>
+                                {% elif ticket.status == 'Escalated' %}
+                                <span class="status-badge warning"
+                                    style="background: rgba(241, 196, 15, 0.15); color: #f1c40f;">Escalated</span>
+                                {% elif ticket.status == 'Rejected' %}
+                                <span class="status-badge danger"
+                                    style="background: rgba(231, 76, 60, 0.15); color: #e74c3c;">Rejected</span>
+                                {% else %}
+                                {{ ticket.status }}
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <a href="{% url 'admin_ticket_detail' ticket.id %}" class="btn-icon btn-icon-edit"
+                                    title="View Details">
+                                    <span class="material-symbols-outlined" style="font-size: 1.1rem;">visibility</span>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-5">
+                                <div class="d-flex flex-column align-items-center opacity-50">
+                                    <span class="material-symbols-outlined fs-2 mb-2">support_agent</span>
+                                    <span>You haven't raised any support requests.</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div class="glass-card">

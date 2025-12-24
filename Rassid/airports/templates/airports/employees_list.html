@@ -2,116 +2,7 @@
 {% load static %}
 
 {% block content %}
-<style>
-    /* Force dark background for this page */
-    body {
-        background-color: #111317 !important;
-        color: #ffffff;
-    }
 
-    /* Avatar Circle */
-    .avatar-circle {
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(135deg, #2dce89 0%, #2dcecc 100%);
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 0.9rem;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        flex-shrink: 0;
-    }
-
-    /* Stats Cards */
-    .stat-card-mini {
-        background: #1e2124;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 12px;
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        transition: transform 0.2s;
-    }
-
-    .stat-card-mini:hover {
-        transform: translateY(-3px);
-        border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .stat-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-    }
-
-    /* Action Buttons */
-    .btn-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 8px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-        border: 1px solid transparent;
-        text-decoration: none;
-    }
-
-    .btn-icon-edit {
-        color: #fff;
-        background: rgba(255, 255, 255, 0.05);
-    }
-
-    .btn-icon-edit:hover {
-        background: rgba(255, 255, 255, 0.15);
-        border-color: rgba(255, 255, 255, 0.2);
-        color: #fff;
-        transform: translateY(-2px);
-    }
-
-    .btn-icon-delete {
-        color: #ff6b6b;
-        background: rgba(255, 107, 107, 0.1);
-    }
-
-    .btn-icon-delete:hover {
-        background: #ff6b6b;
-        color: #fff;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-    }
-
-    .material-symbols-outlined {
-        font-size: 1.25rem;
-    }
-
-    /* Employee Info Column */
-    .emp-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .emp-name {
-        font-size: 0.95rem;
-        line-height: 1.2;
-        color: #ffffff;
-    }
-
-    .emp-email {
-        font-size: 0.8rem;
-        color: #8fa0b0;
-        margin-top: 2px;
-    }
-</style>
 
 
 <div class="page-header">
@@ -219,8 +110,8 @@
                         <td class="ps-4">
                             <div class="d-flex align-items-center">
                                 <div class="avatar-circle me-3">
-                                    {{ emp.first_name|default_if_none:""|first|upper }}{{
-                                    emp.last_name|default_if_none:""|first|upper }}
+                                    {{ emp.first_name|default_if_none:""|first|upper }}
+                                    {{emp.last_name|default_if_none:""|first|upper }}
                                 </div>
                                 <div class="emp-info">
                                     <div class="emp-name">{{ emp.first_name }} {{ emp.last_name }}</div>
