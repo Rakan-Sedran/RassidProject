@@ -56,9 +56,32 @@
                         {% if user.is_authenticated %}
 
                         {% if user.is_superuser %}
+
                         <a href="{% url 'admin_contact_messages' %}" class="nav-link"
                             style="display:flex; align-items:center; gap:6px; justify-content:center; position:relative; margin-right: 15px;">
-                            <span class="material-symbols-outlined" style="font-size: 20px;">mail</span>
+                            <span style="position: relative; display: inline-flex; align-items: center;">
+                                <span class="material-symbols-outlined" style="font-size: 20px;">mail</span>
+                                {% if unresolved_messages_count and unresolved_messages_count > 0 %}
+                                <span style="
+                                    position: absolute;
+                                    top: -10px;
+                                    right: -10px;
+                                    background: #ff4757;
+                                    color: #fff;
+                                    border-radius: 999px;
+                                    font-size: 12px;
+                                    min-width: 18px;
+                                    height: 18px;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    font-weight: 700;
+                                    border: 2px solid #111827;
+                                    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+                                    z-index: 2;
+                                ">{{ unresolved_messages_count }}</span>
+                                {% endif %}
+                            </span>
                             <span>Messages</span>
                         </a>
 

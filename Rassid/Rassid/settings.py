@@ -80,6 +80,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'common.context_processors.pending_requests_count',
+                'common.context_processors.unresolved_messages_count',
             ],
         },
     },
