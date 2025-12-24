@@ -3,17 +3,17 @@
 
 {% block content %}
 
-<div class="page-header">
-    <div class="container">
-        <h1>Platform Dashboard</h1>
-        <p>Overview of system performance and management</p>
-    </div>
-</div>
-
 <div class="dashboard-container" style="max-width: 1400px;">
 
-    <div class="d-flex justify-content-end mb-4">
-        <a href="{% url 'admin_contact_messages' %}" class="btn-action">View Contact Messages</a>
+    <div class="header-section mb-4 d-flex justify-content-between align-items-end">
+        <div>
+            <h2 class="page-title" style="color: #969696; text-shadow: 0 1px 4px #a5a5a5;">Platform Super Admin
+                Dashboard</h2>
+            <p class="page-subtitle">Overview of system performance and management</p>
+        </div>
+        <div>
+            <a href="{% url 'admin_contact_messages' %}" class="btn-action">View Contact Messages</a>
+        </div>
     </div>
 
     <div class="stats-grid">

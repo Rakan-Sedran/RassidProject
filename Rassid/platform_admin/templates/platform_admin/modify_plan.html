@@ -4,15 +4,11 @@
 {% block content %}
 
 
-<div class="page-header">
-    <div class="container">
-        <h1>Modify Subscription</h1>
-        <p>Update plan for {{ airport.name }}</p>
-    </div>
-</div>
-
 <div class="dashboard-container" style="max-width: 600px;">
     <div class="glass-card">
+        <div class="card-header">
+            <h3>Modify Plan: {{ airport.name }}</h3>
+        </div>
 
         <form method="POST">
             {% csrf_token %}

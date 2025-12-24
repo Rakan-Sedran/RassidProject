@@ -2,16 +2,10 @@
 {% load static %}
 
 {% block content %}
-<div class="page-header">
-    <div class="container">
-        <h1>Request Details</h1>
-        <p>Review airport subscription application</p>
-    </div>
-</div>
+<div class="container" style="padding-top: 100px; padding-bottom: 50px; max-width: 1000px;">
 
-<div class="dashboard-container" style="max-width: 1000px;">
-
-    <div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 style="color: #4b4a4a; text-shadow: 0 1px 9px #777777;">Request Details</h2>
         <a href="{% url 'admin_requests_list' %}" class="btn btn-outline-light"
             style=" border-radius: 50px; padding: 8px 20px; ">
             <span class="material-symbols-outlined"
