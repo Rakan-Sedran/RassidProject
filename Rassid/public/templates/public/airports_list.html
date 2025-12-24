@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_tags %}
 
 {% block content %}
 <div class="page-header airports-header-bg">
@@ -18,7 +19,9 @@
     <div class="airports-grid">
         {% for airport in airports %}
         <div class="airport-card">
-            <div class="ac-image" style="background-image: url('https://images.unsplash.com/photo-1530521954074-e64f6810b32d?q=80&w=1000&auto=format&fit=crop');">
+            {% with img_url=airport_images|get_item:airport.id %}
+            <div class="ac-image" style="background-image: url('{{ img_url }}');">
+            {% endwith %}
                 <div class="ac-badge status-active">Active Partner</div>
             </div>
             <div class="ac-content">

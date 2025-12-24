@@ -11,11 +11,20 @@ def about(request):
     return render(request, "public/about.html")
 
 def airports_list(request):
-    from airports.models import AirportSubscription
+    from airports.models import AirportSubscription, SubscriptionRequest
     from django.utils import timezone
     active_subs = AirportSubscription.objects.filter(status='active', expire_at__gt=timezone.now())
     airports = Airport.objects.filter(id__in=active_subs.values_list('airport_id', flat=True))
-    return render(request, "public/airports_list.html", {"airports": airports})
+
+    airport_images = {}
+    for airport in airports:
+        req = SubscriptionRequest.objects.filter(airport_code=airport.code, status='approved').order_by('-created_at').first()
+        if req and req.image:
+            airport_images[airport.id] = req.image.url
+        else:
+            airport_images[airport.id] = '/static/img/airport-default.png'
+
+    return render(request, "public/airports_list.html", {"airports": airports, "airport_images": airport_images})
 
 def flights_list(request):
     from users.models import User
