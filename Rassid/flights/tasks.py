@@ -46,34 +46,9 @@ def check_and_update_flight_statuses(airport_code=None):
             newStatus='Boarding'
         )
 
-    # 2. Auto-Final Call: Boarding -> Final Call
-    # Logic: If status is 'boarding' AND now >= boardingCloseTime - 10 mins
-    # We want to catch flights that are closing soon but aren't yet closed
-    # This runs every minute, so simple inequality checks work well
-    
-    flights_final_call = Flight.objects.filter(
-        status__iexact='boarding',
-        gateassignment__boardingCloseTime__lte=now + timedelta(minutes=10)
-    ).exclude(status__iexact='final call')
-    
-    if airport_code:
-        flights_final_call = flights_final_call.filter(origin__code=airport_code)
-        
-    for flight in flights_final_call:
-        print(f"Auto-updating {flight.flightNumber} to Final Call")
-        old_status = flight.status
-        flight.status = 'Final Call'
-        flight.save()
-        
-        # Log history (Signal will trigger email)
-        FlightStatusHistory.objects.create(
-            flight=flight,
-            oldStatus=old_status,
-            newStatus='Final Call'
-        )
     
     # --- Hardcoded Passenger Logic (User Request) ---
-    create_and_link_test_passengers(airport_code)
+    # create_and_link_test_passengers(airport_code)
 
 def check_1hr_departure_reminders(airport_code=None):
     from django.utils import timezone
@@ -105,54 +80,54 @@ def check_1hr_departure_reminders(airport_code=None):
             desc_ar=f"رحلتك {flight.flightNumber} تغادر خلال ساعة. يرجى التوجه إلى البوابة."
         )
 
-def create_and_link_test_passengers(airport_code=None):
-    from passengers.models import Passenger, PassengerFlight
-    import random
-    import string
+# def create_and_link_test_passengers(airport_code=None):
+#     from passengers.models import Passenger, PassengerFlight
+#     import random
+#     import string
 
-    # 1. Define the 3 requested passengers
-    test_passengers = [
-        {"fullName": "Ziyad Alzahrani", "phone": "+966535778335", "email": "zsyz6279@gmail.com", "preferredLanguage": "ar"},
-        {"fullName": "Rakan Alyami", "phone": "+966509835558", "email": "srakan595@gmail.com", "preferredLanguage": "ar"},
-        {"fullName": "Abdulrahman Alqahtani", "phone": "+966505510181", "email": "aaq_224@hotmail.com", "preferredLanguage": "ar"},
-    ]
+#     # 1. Define the 3 requested passengers
+#     test_passengers = [
+#         {"fullName": "Ziyad Alzahrani", "phone": "+966535778335", "email": "zsyz6279@gmail.com", "preferredLanguage": "ar"},
+#         {"fullName": "Rakan Alyami", "phone": "+966509835558", "email": "srakan595@gmail.com", "preferredLanguage": "ar"},
+#         {"fullName": "Abdulrahman Alqahtani", "phone": "+966505510181", "email": "aaq_224@hotmail.com", "preferredLanguage": "ar"},
+#     ]
 
-    saved_passengers = []
-    for p_data in test_passengers:
-        passenger, created = Passenger.objects.get_or_create(
-            email=p_data["email"],
-            defaults={
-                "fullName": p_data["fullName"],
-                "phone": p_data["phone"],
-                "preferredLanguage": p_data["preferredLanguage"]
-            }
-        )
-        saved_passengers.append(passenger)
-        if created:
-            print(f"Created passenger: {passenger.fullName}")
+#     saved_passengers = []
+#     for p_data in test_passengers:
+#         passenger, created = Passenger.objects.get_or_create(
+#             email=p_data["email"],
+#             defaults={
+#                 "fullName": p_data["fullName"],
+#                 "phone": p_data["phone"],
+#                 "preferredLanguage": p_data["preferredLanguage"]
+#             }
+#         )
+#         saved_passengers.append(passenger)
+#         if created:
+#             print(f"Created passenger: {passenger.fullName}")
 
-    # 2. Get Flights to link to
-    if airport_code:
-        flights = Flight.objects.filter(origin__code=airport_code, status__iexact="scheduled")
-    else:
-        flights = Flight.objects.filter(status__iexact="scheduled")
+#     # 2. Get Flights to link to
+#     if airport_code:
+#         flights = Flight.objects.filter(origin__code=airport_code, status__iexact="scheduled")
+#     else:
+#         flights = Flight.objects.filter(status__iexact="scheduled")
 
-    # 3. Link Passengers
-    for flight in flights:
-        for passenger in saved_passengers:
-            # Check if already linked
-            if not PassengerFlight.objects.filter(passenger=passenger, flight=flight).exists():
-                # Generate dummy seat and reference
-                row = random.randint(1, 30)
-                col = random.choice(['A', 'B', 'C', 'D', 'E', 'F'])
-                seat = f"{row}{col}"
-                ref = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+#     # 3. Link Passengers
+#     for flight in flights:
+#         for passenger in saved_passengers:
+#             # Check if already linked
+#             if not PassengerFlight.objects.filter(passenger=passenger, flight=flight).exists():
+#                 # Generate dummy seat and reference
+#                 row = random.randint(1, 30)
+#                 col = random.choice(['A', 'B', 'C', 'D', 'E', 'F'])
+#                 seat = f"{row}{col}"
+#                 ref = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
                 
-                PassengerFlight.objects.create(
-                    passenger=passenger,
-                    flight=flight,
-                    seatNumber=seat,
-                    bookingRef=ref,
-                    ticketStatus="Checked-in"
-                )
-                print(f"Linked {passenger.fullName} to {flight.flightNumber}")
+#                 PassengerFlight.objects.create(
+#                     passenger=passenger,
+#                     flight=flight,
+#                     seatNumber=seat,
+#                     bookingRef=ref,
+#                     ticketStatus="Checked-in"
+#                 )
+#                 print(f"Linked {passenger.fullName} to {flight.flightNumber}")

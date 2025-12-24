@@ -21,7 +21,7 @@
         <div class="airport-card">
             {% with img_url=airport_images|get_item:airport.id %}
             <div class="ac-image" style="background-image: url('{{ img_url }}');">
-            {% endwith %}
+                {% endwith %}
                 <div class="ac-badge status-active">Active Partner</div>
             </div>
             <div class="ac-content">
@@ -30,9 +30,6 @@
                     <span class="code">{{ airport.code }}</span>
                 </div>
                 <p class="ac-name">{{ airport.name }}</p>
-                <div class="ac-meta simple-meta">
-                    <span><span class="material-symbols-outlined">flight_takeoff</span> Country: {{ airport.country }}</span>
-                </div>
             </div>
         </div>
         {% empty %}
