@@ -108,7 +108,7 @@ def edit_flight(request, pk):
          messages.error(request, "You do not have permission to edit this flight.")
          return redirect('operator_flights_list')
 
-    gate_assignment = GateAssignment.objects.filter(flight=flight).first()
+    gate_assignment = GateAssignment.objects.filter(flight=flight).order_by('-assignedAt').first()
 
     if request.method == 'POST':
         old_status = flight.status

@@ -73,14 +73,6 @@ def flight_status_changed(sender, instance, created, **kwargs):
                 title_ar="بدء صعود الطائرة",
                 desc_ar=f"بدأ صعود الطائرة للرحلة {flight.flightNumber}. يرجى التوجه إلى البوابة."
             )
-        elif new_status == 'final call':
-             send_update_email_to_passengers(
-                flight,
-                title_en="Final Call: Boarding Closing",
-                desc_en=f"This is the final call for flight {flight.flightNumber}. Boarding will close in approximately 10 minutes.",
-                title_ar="النداء الأخير",
-                desc_ar=f"هذا هو النداء الأخير للرحلة {flight.flightNumber}. سيتم إغلاق البوابة خلال 10 دقائق."
-            )
         elif new_status == 'cancelled':
              send_update_email_to_passengers(
                 flight,
@@ -108,8 +100,6 @@ def gate_assigned(sender, instance, created, **kwargs):
     if hasattr(boarding_time, 'strftime'):
         boarding_time_str = boarding_time.strftime('%H:%M')
     else:
-        # It's a string, likely ISO format 'YYYY-MM-DDTHH:MM' or similar
-        # We can just take the time part or print as is
         boarding_time_str = str(boarding_time).split('T')[-1][:5]
 
     send_update_email_to_passengers(

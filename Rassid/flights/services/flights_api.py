@@ -66,6 +66,11 @@ def save_flights_to_db(flights_data):
         arr = flight.get("arrival", {})
         airline = flight.get("airline", {})
         f_info = flight.get("flight", {})
+        
+        # Skip flights without an IATA code (flightNumber is required)
+        flight_number = f_info.get("iata")
+        if not flight_number:
+            continue
 
         # Helper to get better city name
         def get_city_or_name(data):
@@ -114,6 +119,14 @@ def save_flights_to_db(flights_data):
         
         if flight_obj:
             if not flight_obj.is_protected:
+                # Protect local automation (Boarding/Final Call) from being overwritten by "scheduled"/"active" from API
+                current_local = flight_obj.status.lower()
+                incoming_api = parsed.get("status", "").lower()
+                
+                if current_local in ['boarding', 'final call'] and incoming_api in ['scheduled', 'active']:
+                    # Keep the local status, ignore the API status for this specific field
+                    del parsed['status']
+
                 # Update allowed
                 for key, value in parsed.items():
                     setattr(flight_obj, key, value)

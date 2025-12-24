@@ -140,11 +140,17 @@ STATICFILES_DIRS = [
 
 
 CELERY_BEAT_SCHEDULE = {
-    "update_flights_every_10m": {
+    "update_flights_every_1m": {
         "task": "flights.tasks.update_flights_task",
-        "schedule": 600
+        "schedule": 60
     }
 }
+
+# Celery Configuration
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
 
 
 AVIATIONSTACK_API_KEY = os.getenv("AVIATIONSTACK_API_KEY")

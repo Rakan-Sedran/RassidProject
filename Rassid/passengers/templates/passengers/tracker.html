@@ -53,7 +53,7 @@
             <div class="flight-number">Flight Number: {{ flight.flightNumber }}</div>
             <div class="flight-header">
                 <div class="flight-route">
-                    {{ flight.origin.code }} <span style="color:var(--text-light)">→</span> {{ flight.destination.code }}
+                    {{ flight.origin.code }} <span style="color:var(--text-light)">→</span> {{ flight.destination.code}}
                 </div>
                 <div class="status-badge status-{{ flight.status|lower }}">
                     Status: {{ flight.status }}
@@ -122,12 +122,7 @@
         </div>
 
         <div class="card">
-            <div class="floor-switcher" id="floorControls">
-                <!-- Dynamically populated or static -->
-                <button class="floor-btn active" onclick="switchFloor('1')">L1</button>
-                <button class="floor-btn" onclick="switchFloor('2')">L2</button>
-                <button class="floor-btn" onclick="switchFloor('3')">L3</button>
-            </div>
+
             <div id="map"></div>
             <button onclick="alert('Opening Maps...')" class="action-btn">Get Directions</button>
         </div>
@@ -139,168 +134,85 @@
         const MAPBOX_TOKEN = "{{ mapbox_access_token }}";
         const BUILDING_ID = "{{ map_building_id }}";
         const DEFAULT_FLOOR = "{{ map_floor_id }}";
-        const GATE_CODE = "{{ gate.gateCode|default:'' }}"; 
-        
+        const GATE_STR = "{{ gate_coords }}"; // "Lat,Long" string
+
         mapboxgl.accessToken = MAPBOX_TOKEN;
-        
+
+        // Parse Gate Coords (Expects "Lat,Long" -> Mapbox needs [Long, Lat])
+        let center = [46.7028, 24.9576]; // Default RUH
+        let hasGate = false;
+
+        if (GATE_STR && GATE_STR.includes(',')) {
+            const parts = GATE_STR.split(',');
+            // If string is "Lat,Long", flip to [Long, Lat]
+            center = [parseFloat(parts[1]), parseFloat(parts[0])];
+            hasGate = true;
+        }
+
         // Default View (RUH)
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/dark-v10', // Dark mode for premium feel
-            center: [46.7028, 24.9576], // RUH approx
-            zoom: 15,
+            center: center,
+            zoom: hasGate ? 17 : 15,
             pitch: 60, // 3D perspective
             bearing: -17.6,
             antialias: true
         });
 
+        // Add Marker if we have a gate
+        if (hasGate) {
+            new mapboxgl.Marker({ color: "#ef4444" }) // Red marker
+                .setLngLat(center)
+                .addTo(map);
+        }
+
         let currentFloor = DEFAULT_FLOOR;
         let mapData = null;
 
         map.on('load', () => {
-            loadFloorData(BUILDING_ID, currentFloor);
+            // Optional: Load floor data if needed for 3D layout, 
+            // but keeping it simple as requested: "put the old one ... with a marker"
+            // If user wants full 3D layout again, we can uncomment loadFloorData
+            // For now, focusing on the marker requirement.
+
+            // Restore 3D Buildings for context
+            map.addLayer({
+                'id': '3d-buildings',
+                'source': 'composite',
+                'source-layer': 'building',
+                'filter': ['==', 'extrude', 'true'],
+                'type': 'fill-extrusion',
+                'minzoom': 15,
+                'paint': {
+                    'fill-extrusion-color': '#aaa',
+                    'fill-extrusion-height': [
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        15,
+                        0,
+                        15.05,
+                        ['get', 'height']
+                    ],
+                    'fill-extrusion-base': [
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        15,
+                        0,
+                        15.05,
+                        ['get', 'min_height']
+                    ],
+                    'fill-extrusion-opacity': 0.6
+                }
+            });
         });
 
         function switchFloor(floorId) {
-            currentFloor = floorId;
-            
-            // Update UI
-            document.querySelectorAll('.floor-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            loadFloorData(BUILDING_ID, floorId);
+            console.log("Floor switching simplified for marker view.");
         }
-
-        async function loadFloorData(buildingId, floorId) {
-            // Remove existing layer if any
-            if (map.getLayer('airport-data')) map.removeLayer('airport-data');
-            if (map.getSource('airport-data')) map.removeSource('airport-data');
-            if (map.getLayer('gate-highlight')) map.removeLayer('gate-highlight');
-
-            try {
-                // Use Proxy to fetch data
-                const response = await fetch(`/passengers/api/map-proxy/?building_id=${buildingId}&floor_id=${floorId}`);
-                if (!response.ok) throw new Error("Failed to fetch map data");
-                
-                const data = await response.json();
-                mapData = data; // Store for search
-
-                // Convert Coordinates [Lat, Long] -> [Long, Lat]
-                // KKIA API likely returns [Lat, Long] in 'coordinates' field of Polygon
-                // We need to transform the GeoJSON
-                
-                const features = data.features.map(f => {
-                    if (f.geometry && f.geometry.type === 'Polygon') {
-                         const newCoords = f.geometry.coordinates[0].map(coord => [coord[1], coord[0]]);
-                         f.geometry.coordinates = [newCoords];
-                    }
-                    return f;
-                });
-                
-                const geoJson = {
-                    type: 'FeatureCollection',
-                    features: features
-                };
-
-                // Add Source
-                map.addSource('airport-data', {
-                    type: 'geojson',
-                    data: geoJson
-                });
-
-                // Add 3D Extrusion Layer
-                map.addLayer({
-                    'id': 'airport-data',
-                    'type': 'fill-extrusion',
-                    'source': 'airport-data',
-                    'paint': {
-                        'fill-extrusion-color': '#aaa',
-                        'fill-extrusion-height': 5, // Fixed height for visual
-                        'fill-extrusion-base': 0,
-                        'fill-extrusion-opacity': 0.8
-                    }
-                });
-
-                // Highlight Gate if found
-                highlightGate(GATE_CODE);
-
-            } catch (err) {
-                console.error("Map Data Error:", err);
-            }
-        }
-
-        function highlightGate(gateCode) {
-            if (!gateCode || !mapData) return;
-
-            // Simple search buffer logic - strict or partial
-            // Adjust based on actual data structure (assuming 'title' has 'Gate 20' or similar)
-            const target = mapData.features.find(f => 
-                f.properties && f.properties.title && 
-                (f.properties.title === gateCode || f.properties.title.includes(gateCode))
-            );
-
-            if (target) {
-                console.log("Found Gate:", target.properties.title);
-                
-                // Calculate Center for FlyTo
-                // Simple avg of coordinates
-                // Remember we flipped them for mapbox [Long, Lat]
-                const coords = target.geometry.coordinates[0]; // [ [Long,Lat]... ] (After our flip if we did it in place) or we need to re-flip
-                // Wait, my previous map function modified the object in place? Yes.
-                
-                let sumLng = 0, sumLat = 0;
-                coords.forEach(c => { sumLng += c[0]; sumLat += c[1]; });
-                const center = [sumLng / coords.length, sumLat / coords.length];
-
-                map.flyTo({
-                    center: center,
-                    zoom: 18,
-                    pitch: 60,
-                    essential: true
-                });
-
-                // Add Highlight Layer
-                map.addLayer({
-                    'id': 'gate-highlight',
-                    'type': 'fill-extrusion',
-                    'source': 'airport-data',
-                    'filter': ['==', ['get', 'title'], target.properties.title], // Assuming 'title' property exists
-                    'paint': {
-                        'fill-extrusion-color': '#FFD700', // Gold/Yellow Highlight
-                        'fill-extrusion-height': 10,
-                        'fill-extrusion-base': 0,
-                        'fill-extrusion-opacity': 1
-                    }
-                });
-                
-                 // Also add a red outline if possible, or just use bright color
-            } else {
-                 console.log("Gate not found on this floor.");
-            }
-        }
-
     </script>
-    let phase = "{{ phase }}";
-    let remainingSeconds = 0;
-
-    if (phase === 'pre_open') {
-    remainingSeconds = {{ seconds_to_open |default: 0 }
-    };
-    } else if (phase === 'boarding') {
-    remainingSeconds = {{ seconds_to_close |default: 0 }
-    };
-    }
-
-    function pad(n) { return n < 10 ? '0' + n : n; } function formatTime(totalSeconds) { if (totalSeconds < 0)
-        return "00:00:00" ; const h=Math.floor(totalSeconds / 3600); const m=Math.floor((totalSeconds % 3600) / 60);
-        const s=totalSeconds % 60; return `${pad(h)}:${pad(m)}:${pad(s)}`; } function updateCounter() { const
-        el=document.getElementById("countdown"); if (phase==='closed' ) { el.innerHTML="Boarding Closed" ;
-        el.style.color="#ef4444" ; return; } if (phase==='unknown' ) return; remainingSeconds--; if (remainingSeconds <
-        0) { location.reload(); return; } let prefix="" ; let timeString=formatTime(remainingSeconds); if
-        (phase==='pre_open' ) { prefix="Boarding opens in" ; el.style.color="var(--primary)" ; } else if
-        (phase==='boarding' ) { prefix="Boarding closes in" ; el.style.color="#b45309" ; } el.innerHTML=`${prefix}
-        ${timeString}`; } if (phase !=='closed' && phase !=='unknown' ) { setInterval(updateCounter, 1000);
-        updateCounter(); } </script>
 
 </body>
 
