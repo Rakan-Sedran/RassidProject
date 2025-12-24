@@ -83,49 +83,51 @@
             </a>
         </div>
 
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for employee in employees|slice:":5" %}
-                <tr>
-                    <td>{{ employee.first_name|default:employee.email }}</td>
-                    <td>{{ employee.email }}</td>
-                    <td>{{ employee.role|default:"User" }}</td>
-                    <td>
-                        {% if employee.is_active %}
-                        Active
-                        {% else %}
-                        Inactive
-                        {% endif %}
-                    </td>
-                    <td class="text-end">
-                        <a href="{% url 'airport_admin_edit_employee' employee.id %}" class="btn-action">
-                            Edit
-                        </a>
-                        <a href="{% url 'airport_admin_delete_employee' employee.id %}" class="btn-action"
-                            style="background: rgba(231, 76, 60, 0.2); color: #e74c3c; border-color: #e74c3c;"
-                            onclick="return confirm('Are you sure you want to delete this employee?');">
-                            Delete
-                        </a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center text-muted">
-                        No employees found.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employees|slice:":5" %}
+                    <tr>
+                        <td>{{ employee.first_name|default:employee.email }}</td>
+                        <td>{{ employee.email }}</td>
+                        <td>{{ employee.role|default:"User" }}</td>
+                        <td>
+                            {% if employee.is_active %}
+                            Active
+                            {% else %}
+                            Inactive
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{% url 'airport_admin_edit_employee' employee.id %}" class="btn-action">
+                                Edit
+                            </a>
+                            <a href="{% url 'airport_admin_delete_employee' employee.id %}" class="btn-action"
+                                style="background: rgba(231, 76, 60, 0.2); color: #e74c3c; border-color: #e74c3c;"
+                                onclick="return confirm('Are you sure you want to delete this employee?');">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">
+                            No employees found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- UNIFIED TICKET TABS -->
@@ -162,127 +164,130 @@
         </div>
 
         <div class="tab-content" id="ticketTabsContent">
-            <!-- TAB 1: Incoming Tickets -->
             <div class="tab-pane fade show active" id="incoming" role="tabpanel" aria-labelledby="incoming-tab">
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Submited By</th>
-                            <th>Priority</th>
-                            <th>Status</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for ticket in incoming_tickets %}
-                        <tr>
-                            <td>#{{ ticket.id }}</td>
-                            <td>{{ ticket.title|truncatechars:30 }}</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="avatar-circle" style="width: 24px; height: 24px; font-size: 0.7rem;">
-                                        {{ ticket.createdBy.first_name|default:ticket.createdBy.email|first|upper }}
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Submited By</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ticket in incoming_tickets %}
+                            <tr>
+                                <td>#{{ ticket.id }}</td>
+                                <td>{{ ticket.title|truncatechars:30 }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="avatar-circle" style="width: 24px; height: 24px; font-size: 0.7rem;">
+                                            {{ ticket.createdBy.first_name|default:ticket.createdBy.email|first|upper }}
+                                        </div>
+                                        <span class="small">{{ ticket.createdBy.first_name }} {{ ticket.createdBy.last_name
+                                            }}</span>
                                     </div>
-                                    <span class="small">{{ ticket.createdBy.first_name }} {{ ticket.createdBy.last_name
-                                        }}</span>
-                                </div>
-                            </td>
-                            <td>
-                                {% if ticket.priority == 'High' %}
-                                <span class="status-badge danger">High</span>
-                                {% else %}
-                                {{ ticket.priority }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                <span class="status-badge warning">{{ ticket.status }}</span>
-                            </td>
-                            <td class="text-end">
-                                {% if ticket.status == 'Open' %}
-                                <a href="{% url 'admin_ticket_escalate' ticket.id %}" class="btn-action"
-                                    onclick="return confirm('Escalate this ticket to Platform Admin?');"
-                                    style="background: rgba(241, 196, 15, 0.1); color: #f1c40f; border-color: rgba(241, 196, 15, 0.2);">
-                                    Escalate
-                                </a>
-                                {% endif %}
-                                <a href="{% url 'admin_ticket_detail' ticket.id %}" class="btn-icon btn-icon-edit"
-                                    title="View">
-                                    <span class="material-symbols-outlined" style="font-size: 1.1rem;">visibility</span>
-                                </a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" class="text-center text-muted py-5">
-                                <div class="d-flex flex-column align-items-center opacity-50">
-                                    <span class="material-symbols-outlined fs-2 mb-2">inbox</span>
-                                    <span>No new tickets from staff.</span>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                                </td>
+                                <td>
+                                    {% if ticket.priority == 'High' %}
+                                    <span class="status-badge danger">High</span>
+                                    {% else %}
+                                    {{ ticket.priority }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="status-badge warning">{{ ticket.status }}</span>
+                                </td>
+                                <td class="text-end">
+                                    {% if ticket.status == 'Open' %}
+                                    <a href="{% url 'admin_ticket_escalate' ticket.id %}" class="btn-action"
+                                        onclick="return confirm('Escalate this ticket to Platform Admin?');"
+                                        style="background: rgba(241, 196, 15, 0.1); color: #f1c40f; border-color: rgba(241, 196, 15, 0.2);">
+                                        Escalate
+                                    </a>
+                                    {% endif %}
+                                    <a href="{% url 'admin_ticket_detail' ticket.id %}" class="btn-icon btn-icon-edit"
+                                        title="View">
+                                        <span class="material-symbols-outlined" style="font-size: 1.1rem;">visibility</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-5">
+                                    <div class="d-flex flex-column align-items-center opacity-50">
+                                        <span class="material-symbols-outlined fs-2 mb-2">inbox</span>
+                                        <span>No new tickets from staff.</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- TAB 2: My Support Requests -->
             <div class="tab-pane fade" id="my-requests" role="tabpanel" aria-labelledby="my-requests-tab">
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Date</th>
-                            <th>Priority</th>
-                            <th>Status</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for ticket in my_tickets %}
-                        <tr>
-                            <td>#{{ ticket.id }}</td>
-                            <td>{{ ticket.title|truncatechars:45 }}</td>
-                            <td>{{ ticket.createdAt|date:"M d" }}</td>
-                            <td>{{ ticket.priority }}</td>
-                            <td>
-                                {% if ticket.status == 'Open' %}
-                                <span class="status-badge success"
-                                    style="background: rgba(46, 204, 113, 0.15); color: #2ecc71;">Open</span>
-                                {% elif ticket.status == 'Closed' %}
-                                <span class="status-badge"
-                                    style="background: rgba(149, 165, 166, 0.15); color: #95a5a6;">Closed</span>
-                                {% elif ticket.status == 'Escalated' %}
-                                <span class="status-badge warning"
-                                    style="background: rgba(241, 196, 15, 0.15); color: #f1c40f;">Escalated</span>
-                                {% elif ticket.status == 'Rejected' %}
-                                <span class="status-badge danger"
-                                    style="background: rgba(231, 76, 60, 0.15); color: #e74c3c;">Rejected</span>
-                                {% else %}
-                                {{ ticket.status }}
-                                {% endif %}
-                            </td>
-                            <td class="text-end">
-                                <a href="{% url 'admin_ticket_detail' ticket.id %}" class="btn-icon btn-icon-edit"
-                                    title="View Details">
-                                    <span class="material-symbols-outlined" style="font-size: 1.1rem;">visibility</span>
-                                </a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" class="text-center text-muted py-5">
-                                <div class="d-flex flex-column align-items-center opacity-50">
-                                    <span class="material-symbols-outlined fs-2 mb-2">support_agent</span>
-                                    <span>You haven't raised any support requests.</span>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ticket in my_tickets %}
+                            <tr>
+                                <td>#{{ ticket.id }}</td>
+                                <td>{{ ticket.title|truncatechars:45 }}</td>
+                                <td>{{ ticket.createdAt|date:"M d" }}</td>
+                                <td>{{ ticket.priority }}</td>
+                                <td>
+                                    {% if ticket.status == 'Open' %}
+                                    <span class="status-badge success"
+                                        style="background: rgba(46, 204, 113, 0.15); color: #2ecc71;">Open</span>
+                                    {% elif ticket.status == 'Closed' %}
+                                    <span class="status-badge"
+                                        style="background: rgba(149, 165, 166, 0.15); color: #95a5a6;">Closed</span>
+                                    {% elif ticket.status == 'Escalated' %}
+                                    <span class="status-badge warning"
+                                        style="background: rgba(241, 196, 15, 0.15); color: #f1c40f;">Escalated</span>
+                                    {% elif ticket.status == 'Rejected' %}
+                                    <span class="status-badge danger"
+                                        style="background: rgba(231, 76, 60, 0.15); color: #e74c3c;">Rejected</span>
+                                    {% else %}
+                                    {{ ticket.status }}
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <a href="{% url 'admin_ticket_detail' ticket.id %}" class="btn-icon btn-icon-edit"
+                                        title="View Details">
+                                        <span class="material-symbols-outlined" style="font-size: 1.1rem;">visibility</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-5">
+                                    <div class="d-flex flex-column align-items-center opacity-50">
+                                        <span class="material-symbols-outlined fs-2 mb-2">support_agent</span>
+                                        <span>You haven't raised any support requests.</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -319,58 +324,60 @@
             <h3>Payment History</h3>
         </div>
 
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Plan</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for payment in payments %}
-                <tr>
-                    <td>{{ payment.created_at|date:"Y-m-d" }}</td>
-                    <td>$499.00</td>
-                    <td>{{ payment.get_selected_plan_display }}</td>
-                    <td>
-                        {% if payment.status == 'approved' %}
-                        <span class="status-badge success">{{ payment.get_status_display }}</span>
-                        {% elif payment.status == 'approved_pending_payment' %}
-                        <span class="status-badge warning" style="color:#f39c12;">Approved (Pending Pay)</span>
-                        {% elif payment.status == 'pending' %}
-                        <span class="status-badge warning">{{ payment.get_status_display }}</span>
-                        {% elif payment.status == 'rejected' %}
-                        <span class="status-badge danger">{{ payment.get_status_display }}</span>
-                        {% else %}
-                        {{ payment.get_status_display }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if payment.status == 'approved_pending_payment' %}
-                        <div style="display: flex; gap: 5px;">
-                            <a href="{% url 'airport_payment_checkout' payment.id %}" class="btn-action"
-                                style="background: rgba(45, 206, 137, 0.1); color: #2dce89; border: 1px solid rgba(45, 206, 137, 0.2); padding: 5px 10px; font-size: 0.8rem;">
-                                Pay Now
-                            </a>
-                            <a href="{% url 'cancel_subscription_request' payment.id %}" class="btn-action"
-                                style="background: rgba(231, 76, 60, 0.1); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.2); padding: 5px 10px; font-size: 0.8rem;"
-                                onclick="return confirm('Are you sure you want to cancel this request?');">
-                                Cancel
-                            </a>
-                        </div>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center text-muted">No payment history found.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Plan</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payments %}
+                    <tr>
+                        <td>{{ payment.created_at|date:"Y-m-d" }}</td>
+                        <td>$499.00</td>
+                        <td>{{ payment.get_selected_plan_display }}</td>
+                        <td>
+                            {% if payment.status == 'approved' %}
+                            <span class="status-badge success">{{ payment.get_status_display }}</span>
+                            {% elif payment.status == 'approved_pending_payment' %}
+                            <span class="status-badge warning" style="color:#f39c12;">Approved (Pending Pay)</span>
+                            {% elif payment.status == 'pending' %}
+                            <span class="status-badge warning">{{ payment.get_status_display }}</span>
+                            {% elif payment.status == 'rejected' %}
+                            <span class="status-badge danger">{{ payment.get_status_display }}</span>
+                            {% else %}
+                            {{ payment.get_status_display }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if payment.status == 'approved_pending_payment' %}
+                            <div style="display: flex; gap: 5px;">
+                                <a href="{% url 'airport_payment_checkout' payment.id %}" class="btn-action"
+                                    style="background: rgba(45, 206, 137, 0.1); color: #2dce89; border: 1px solid rgba(45, 206, 137, 0.2); padding: 5px 10px; font-size: 0.8rem;">
+                                    Pay Now
+                                </a>
+                                <a href="{% url 'cancel_subscription_request' payment.id %}" class="btn-action"
+                                    style="background: rgba(231, 76, 60, 0.1); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.2); padding: 5px 10px; font-size: 0.8rem;"
+                                    onclick="return confirm('Are you sure you want to cancel this request?');">
+                                    Cancel
+                                </a>
+                            </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No payment history found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>

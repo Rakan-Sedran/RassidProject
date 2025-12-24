@@ -46,42 +46,44 @@
         <div class="card-header">
             <h3>Airports Management</h3>
         </div>
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>Airport Name</th>
-                    <th>Code</th>
-                    <th>Location</th>
-                    <th>Status</th>
-                    <th>Remaining Time</th>
-                    <th>Admins</th>
-                    <th style="text-align: right;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for airport in latest_airports %}
-                <tr>
-                    <td style="font-weight: bold; color: white;">{{ airport.name }}</td>
-                    <td><span class="code-badge">{{ airport.code }}</span></td>
-                    <td>{{ airport.city }}, {{ airport.country }}</td>
-                    <td>
-                        {% if airport.status == 'active' %}
-                        <span class="status-badge active">Active</span>
-                        {% else %}
-                        <span class="status-badge danger">{{ airport.status|title }}</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <span style="color: #cbd5e1; font-size: 0.9em;">{{ airport.remaining_time_str }}</span>
-                    </td>
-                    <td style="color: #cbd5e1;">{{ airport.admins_count }} Admins</td>
-                    <td style="text-align: right;">
-                        <a href="{% url 'admin_airport_details' airport.id %}" class="btn-action">View</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Airport Name</th>
+                        <th>Code</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Remaining Time</th>
+                        <th>Admins</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for airport in latest_airports %}
+                    <tr>
+                        <td style="font-weight: bold; color: white;">{{ airport.name }}</td>
+                        <td><span class="code-badge">{{ airport.code }}</span></td>
+                        <td>{{ airport.city }}, {{ airport.country }}</td>
+                        <td>
+                            {% if airport.status == 'active' %}
+                            <span class="status-badge active">Active</span>
+                            {% else %}
+                            <span class="status-badge danger">{{ airport.status|title }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span style="color: #cbd5e1; font-size: 0.9em;">{{ airport.remaining_time_str }}</span>
+                        </td>
+                        <td style="color: #cbd5e1;">{{ airport.admins_count }} Admins</td>
+                        <td style="text-align: right;">
+                            <a href="{% url 'admin_airport_details' airport.id %}" class="btn-action">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
 
@@ -90,44 +92,46 @@
         <div class="card-header">
             <h3>Ticket System</h3>
         </div>
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Airport</th>
-                    <th>Title</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th style="text-align: right;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ticket in tickets %}
-                <tr>
-                    <td style="color: #aaa;">#{{ ticket.id }}</td>
-                    <td style="color: white;">{{ ticket.airport }}</td>
-                    <td>{{ ticket.title }}</td>
-                    <td>
-                        {% if ticket.priority == 'High' %}
-                        <span class="status-badge danger">High</span>
-                        {% elif ticket.priority == 'Medium' %}
-                        <span class="status-badge warning">Medium</span>
-                        {% else %}
-                        <span class="status-badge success">Low</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ ticket.status }}</td>
-                    <td style="text-align: right;">
-                        <a href="{% url 'platform_ticket_detail' ticket.id %}" class="btn-action">View & Reply</a>
-                        {% if ticket.assignedTo == request.user %}
-                        <span class="badge"
-                            style="background: #8b5cf6; padding: 2px 6px; font-size: 10px; margin-left: 5px;">Assigned</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Airport</th>
+                        <th>Title</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td style="color: #aaa;">#{{ ticket.id }}</td>
+                        <td style="color: white;">{{ ticket.airport }}</td>
+                        <td>{{ ticket.title }}</td>
+                        <td>
+                            {% if ticket.priority == 'High' %}
+                            <span class="status-badge danger">High</span>
+                            {% elif ticket.priority == 'Medium' %}
+                            <span class="status-badge warning">Medium</span>
+                            {% else %}
+                            <span class="status-badge success">Low</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ ticket.status }}</td>
+                        <td style="text-align: right;">
+                            <a href="{% url 'platform_ticket_detail' ticket.id %}" class="btn-action">View & Reply</a>
+                            {% if ticket.assignedTo == request.user %}
+                            <span class="badge"
+                                style="background: #8b5cf6; padding: 2px 6px; font-size: 10px; margin-left: 5px;">Assigned</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>

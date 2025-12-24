@@ -3,19 +3,16 @@
 
 {% block content %}
 <div class="container section-padding">
-    <div class="mb-4">
-        <a href="{% url 'admin_contact_messages' %}" class="btn-outline">&larr; Back to Messages</a>
-    </div>
-
+<br>
     <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
         <div class="d-flex justify-content-between align-items-start mb-4 pb-4 border-bottom" style="border-color: rgba(255,255,255,0.1) !important;">
             <div>
-                <h2 class="mb-1">{{ submission.subject }}</h2>
-                <div class="text-muted">
-                    From: <span class="text-white">{{ submission.first_name }} {{ submission.last_name }}</span> 
-                    &lt;<a href="mailto:{{ submission.email }}" style="color:var(--primary);">{{ submission.email }}</a>&gt;
+                <h2 class="mb-1 text-white">{{ submission.subject }}</h2>
+                <div style="color: #e2e8f0; font-size: 1.05rem;">
+                    From: <span class="text-white fw-bold">{{ submission.first_name }} {{ submission.last_name }}</span> 
+                    &lt;<a href="mailto:{{ submission.email }}" style="color: #60a5fa; text-decoration: none;">{{ submission.email }}</a>&gt;
                 </div>
-                <div class="text-muted small mt-1">Received: {{ submission.created_at|date:"M d, Y H:i" }}</div>
+                <div class="small mt-1" style="color: #94a3b8;">Received: {{ submission.created_at|date:"M d, Y H:i" }}</div>
             </div>
             <div>
                 {% if submission.is_resolved %}
@@ -27,13 +24,13 @@
         </div>
 
         <div class="mb-5">
-            <h5 class="text-muted mb-3">Message Body</h5>
-            <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; line-height: 1.6;">
+            <h5 class="text-white mb-3" style="font-weight: 600;">Message Body</h5>
+            <div style="background: rgba(0, 0, 0, 0.3); color: #f8fafc; padding: 25px; border-radius: 12px; line-height: 1.8; font-size: 1.05rem; border: 1px solid rgba(255,255,255,0.05);">
                 {{ submission.message|linebreaks }}
             </div>
         </div>
 
-        <div class="d-flex justify-content-end gap-3 pt-4 border-top" style="border-color: rgba(255,255,255,0.1) !important;">
+        <div class="d-flex justify-content-end gap-3 pt-4 border-top" style="border-color: rgba(255, 255, 255, 0.1) !important;">
             <a href="mailto:{{ submission.email }}?subject=Re: {{ submission.subject }}" class="btn-primary">
                 Reply via Email
             </a>

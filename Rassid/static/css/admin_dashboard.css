@@ -2,6 +2,7 @@ body {
     background-color: #f5f6f8 !important;
 }
 
+
 nav,
 #navbar,
 .navbar {
@@ -612,7 +613,7 @@ nav,
 }
 
 .text-muted {
-    color: #8fa0b0 !important;
+    color: #ffffff !important;
 }
 
 .nav-tabs-custom {
