@@ -69,7 +69,7 @@ def flight_tracker(request, booking_token):
             'type': 'gate',
             'timestamp': g.assignedAt,
             'title': f"Gate Assigned: {g.gateCode}",
-            'description': f"Terminal {g.terminal}. Boarding: {g.boardingOpenTime.strftime('%H:%M')}"
+            'description': f"Terminal {g.terminal}. Boarding: {g.boardingOpenTime.strftime('%H:%M') if g.boardingOpenTime else 'TBD'}"
         })
         
     timeline.sort(key=lambda x: x['timestamp'], reverse=True)

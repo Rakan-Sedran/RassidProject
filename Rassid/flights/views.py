@@ -14,6 +14,7 @@ from .serializers import (
 from users.permissions import IsAirportAdmin, IsOperator
 from airports.models import Airport
 from django.utils import timezone
+from django.db.models import Prefetch
 
 
 class FlightViewSet(ModelViewSet):
@@ -46,14 +47,9 @@ def flights_list(request):
 
     today = timezone.now().date()
     
-    cutoff_time = timezone.now() - timezone.timedelta(hours=1)
-    
-    from django.db.models import Prefetch
-    
     flights = Flight.objects.filter(
-        origin_id=request.user.airport_id, 
-        scheduledDeparture__gte=cutoff_time
-    ).exclude(status__iexact='landed').exclude(status__iexact='cancelled').prefetch_related(
+        origin_id=request.user.airport_id
+    ).prefetch_related(
         Prefetch('gateassignment_set', queryset=GateAssignment.objects.order_by('-assignedAt'), to_attr='latest_gates')
     ).order_by("scheduledDeparture")
     
