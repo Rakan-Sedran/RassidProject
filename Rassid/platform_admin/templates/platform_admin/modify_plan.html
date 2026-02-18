@@ -22,8 +22,7 @@
                     {% for code, label in plans %}
                     <label class="glass-card plan-selector {% if subscription.plan_type == code %}active{% endif %}"
                         style="padding: 15px; cursor: pointer;">
-                        <input type="radio" name="plan_type" value="{{ code }}" {% if subscription.plan_type==code
-                            %}checked{% endif %} style="margin-right: 10px;">
+                        <input type="radio" name="plan_type" value="{{ code }}" {% if subscription.plan_type == code %}checked{% endif %} style="margin-right: 10px;">
                         {{ label }}
                         {% if subscription.plan_type == code %} (Current) {% endif %}
                     </label>
