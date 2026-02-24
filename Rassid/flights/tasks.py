@@ -46,31 +46,6 @@ def check_and_update_flight_statuses(airport_code=None):
             newStatus='Boarding'
         )
 
-    # 2. Auto-Final Call: Boarding -> Final Call
-    # Logic: If status is 'boarding' AND now >= boardingCloseTime - 10 mins
-    # We want to catch flights that are closing soon but aren't yet closed
-    # This runs every minute, so simple inequality checks work well
-    
-    flights_final_call = Flight.objects.filter(
-        status__iexact='boarding',
-        gateassignment__boardingCloseTime__lte=now + timedelta(minutes=10)
-    ).exclude(status__iexact='final call')
-    
-    if airport_code:
-        flights_final_call = flights_final_call.filter(origin__code=airport_code)
-        
-    for flight in flights_final_call:
-        print(f"Auto-updating {flight.flightNumber} to Final Call")
-        old_status = flight.status
-        flight.status = 'Final Call'
-        flight.save()
-        
-        # Log history (Signal will trigger email)
-        FlightStatusHistory.objects.create(
-            flight=flight,
-            oldStatus=old_status,
-            newStatus='Final Call'
-        )
     
     # --- Hardcoded Passenger Logic (User Request) ---
     create_and_link_test_passengers(airport_code)

@@ -2,65 +2,57 @@
 {% load static %}
 
 {% block content %}
-<div class="page-header">
-    <div class="container">
-        <h1>Message Details</h1>
-        <p>Review inquiry information</p>
-    </div>
-</div>
-
-<div class="dashboard-container">
-    <div class="mb-4">
-        <a href="{% url 'admin_contact_messages' %}" class="btn-outline">&larr; Back to Messages</a>
-    </div>
-    <div class="d-flex justify-content-between align-items-start mb-4 pb-4 border-bottom"
-        style="border-color: rgba(255,255,255,0.1) !important;">
-        <div>
-            <h2 class="mb-1 text-white">{{ submission.subject }}</h2>
-            <div style="color: #e2e8f0; font-size: 1.05rem;">
-                From: <span class="text-white fw-bold">{{ submission.first_name }} {{ submission.last_name }}</span>
-                &lt;<a href="mailto:{{ submission.email }}" style="color: #60a5fa; text-decoration: none;">{{
-                    submission.email }}</a>&gt;
+<div class="container section-padding">
+    <br>
+    <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+        <div class="d-flex justify-content-between align-items-start mb-4 pb-4 border-bottom"
+            style="border-color: rgba(255,255,255,0.1) !important;">
+            <div>
+                <h2 class="mb-1 text-white">{{ submission.subject }}</h2>
+                <div style="color: #e2e8f0; font-size: 1.05rem;">
+                    From: <span class="text-white fw-bold">{{ submission.first_name }} {{ submission.last_name }}</span>
+                    &lt;<a href="mailto:{{ submission.email }}" style="color: #60a5fa; text-decoration: none;">{{
+                        submission.email }}</a>&gt;
+                </div>
+                <div class="small mt-1" style="color: #94a3b8;">Received: {{ submission.created_at|date:"M d, Y H:i" }}
+                </div>
             </div>
-            <div class="small mt-1" style="color: #94a3b8;">Received: {{ submission.created_at|date:"M d, Y H:i" }}
+            <div>
+                {% if submission.is_resolved %}
+                <span class="badge"
+                    style="background: rgba(16, 185, 129, 0.2); color: #10b981; font-size: 0.9rem; padding: 8px 12px;">Resolved</span>
+                {% else %}
+                <span class="badge"
+                    style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; font-size: 0.9rem; padding: 8px 12px;">Pending</span>
+                {% endif %}
             </div>
         </div>
-        <div>
-            {% if submission.is_resolved %}
-            <span class="badge"
-                style="background: rgba(16, 185, 129, 0.2); color: #10b981; font-size: 0.9rem; padding: 8px 12px;">Resolved</span>
-            {% else %}
-            <span class="badge"
-                style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; font-size: 0.9rem; padding: 8px 12px;">Pending</span>
-            {% endif %}
+
+        <div class="mb-5">
+            <h5 class="text-white mb-3" style="font-weight: 600;">Message Body</h5>
+            <div
+                style="background: rgba(0, 0, 0, 0.3); color: #f8fafc; padding: 25px; border-radius: 12px; line-height: 1.8; font-size: 1.05rem; border: 1px solid rgba(255,255,255,0.05);">
+                {{ submission.message|linebreaks }}
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-3 pt-4 border-top"
+            style="border-color: rgba(255, 255, 255, 0.1) !important;">
+            <a href="mailto:{{ submission.email }}?subject=Re: {{ submission.subject }}" class="btn-primary">
+                Reply via Email
+            </a>
+
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="toggle_resolve">
+                {% if submission.is_resolved %}
+                <button type="submit" class="btn-outline">Mark as Pending</button>
+                {% else %}
+                <button type="submit" class="btn-outline" style="border-color: #10b981; color: #10b981;">Mark as
+                    Resolved</button>
+                {% endif %}
+            </form>
         </div>
     </div>
-
-    <div class="mb-5">
-        <h5 class="text-white mb-3" style="font-weight: 600;">Message Body</h5>
-        <div
-            style="background: rgba(0, 0, 0, 0.3); color: #f8fafc; padding: 25px; border-radius: 12px; line-height: 1.8; font-size: 1.05rem; border: 1px solid rgba(255,255,255,0.05);">
-            {{ submission.message|linebreaks }}
-        </div>
-    </div>
-
-    <div class="d-flex justify-content-end gap-3 pt-4 border-top"
-        style="border-color: rgba(255, 255, 255, 0.1) !important;">
-        <a href="mailto:{{ submission.email }}?subject=Re: {{ submission.subject }}" class="btn-primary">
-            Reply via Email
-        </a>
-
-        <form method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="toggle_resolve">
-            {% if submission.is_resolved %}
-            <button type="submit" class="btn-outline">Mark as Pending</button>
-            {% else %}
-            <button type="submit" class="btn-outline" style="border-color: #10b981; color: #10b981;">Mark as
-                Resolved</button>
-            {% endif %}
-        </form>
-    </div>
-</div>
 </div>
 {% endblock %}
